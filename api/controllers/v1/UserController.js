@@ -8,6 +8,10 @@
 var _ = require('lodash');
 
 module.exports = {
+  _config: {
+    model: 'user'
+  },
+  
   create: function (req, res) {
     if (req.body.password !== req.body.confirmPassword) {
       return ResponseService.json(401, res, "Password doesn't match")

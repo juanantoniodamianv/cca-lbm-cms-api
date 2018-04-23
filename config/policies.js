@@ -22,11 +22,11 @@ module.exports.policies = {
 
   '*': ['isAuthorized'],
 
-  'UserController': {
+  'v1/UserController': {
     'create': true
   },
 
-  'AuthController': {
+  'v1/AuthController': {
     '*': true
   }
 };

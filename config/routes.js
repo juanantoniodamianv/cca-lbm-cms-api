@@ -1,5 +1,6 @@
 
 module.exports.routes = {
-  'post /login': 'AuthController.login',
-  'post /signup': 'UserController.create'
+  'post /user/login': 'AuthController.login',
+  'post /user/signup': 'UserController.create',
+  'get /users': 'UserController.index'
 };

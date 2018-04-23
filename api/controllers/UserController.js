@@ -31,6 +31,29 @@ module.exports = {
         }
       }
     )
+  },
 
+  index: function (req, res, next) {
+    User.find(function foundUsers (err, users) {
+      if (err) return next(err);
+      var responseData = {
+        users: users
+      }
+      return ResponseService.json(200, res, responseData)
+    });
+  },
+
+  show: function (req, res, next) {
+    User.findOne(req.params('id'), function foundUser (err, user) {
+      if (err) return next(err);
+      if (!user) return next();
+      var responseData = {
+        user: user
+      }
+      return ResponseService.json(200, res, responseData)
+    });
   }
+
+
+
 };

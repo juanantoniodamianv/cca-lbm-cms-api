@@ -14,17 +14,18 @@ ___
 
 HTTP Response, success example:
 ```json
-{
-    "response": {
-        "message": "User created successfully",
-        "data": {
-            "user": {
-                "email": "admin@admin.com",
-                "createdAt": "2018-06-25T12:22:52.613Z",
-                "updatedAt": "2018-06-25T12:22:52.613Z",
-                "id": "5b30de9c12f8c159e2c17afe"
-            },
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViMzBkZTljMTJmOGMxNTllMmMxN2FmZSIsImlhdCI6MTUyOTkyOTM3MiwiZXhwIjoxNTI5OTQwMTcyfQ.TWE4AYVsT8zTMr5Mn-YtBGyrg4Y-IHyd5T0g05MELGQ"
+    {
+        "response": {
+            "message": "User created successfully",
+            "data": {
+                "user": {
+                    "email": "admin@admin.com",
+                    "createdAt": "2018-06-25T12:22:52.613Z",
+                    "updatedAt": "2018-06-25T12:22:52.613Z",
+                    "id": "5b30de9c12f8c159e2c17afe"
+                },
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViMzBkZTljMTJmOGMxNTllMmMxN2FmZSIsImlhdCI6MTUyOTkyOTM3MiwiZXhwIjoxNTI5OTQwMTcyfQ.TWE4AYVsT8zTMr5Mn-YtBGyrg4Y-IHyd5T0g05MELGQ"
+            }
         }
     }
-}
+```

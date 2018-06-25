@@ -10,7 +10,7 @@ ___
 
 |Description    |Method |URL    |Parameters   |Body |Header |
 |---------------|-------|-------|-------------|-----|-------|
-|Create user (only administrators users, or superior role, can create other users)  |POST   |http://localhost:1337/v1/user/signup   |   |email, password, confirmPassword   |`Authorization bearer <token>` |
+|Create user (only administrators users, or superior role, can create other users)  |POST   |http://localhost:1337/v1/user/signup   |   |email (required),<br/> password (required),<br/> confirmPassword (required)   |`Authorization bearer <token>` |
 
 HTTP Response, success example:
 ```json

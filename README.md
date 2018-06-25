@@ -16,3 +16,7 @@ ___
 			confirmPassword: :string, required: true	
 		header 
 			Authorization bearer <token>
+
+|Description    |Method |URL    |Parameters   |Body |Header |
+|---------------|-------|-------|-------------|-----|-------|
+|Create user (only administrators users, or superior role, can create other users)  |POST   |http://localhost:1337/v1/user/signup   |   |email, password, confirmPassword   |`Authorization bearer <token>` |

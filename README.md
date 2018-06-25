@@ -1,29 +1,18 @@
-# README #
+# CCA Api #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Instore Messaging Portal.
 
-### What is this repository for? ###
+## API References ##
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+## **USER**
+___
+### To create a user: 
+(only administrators users, or superior role, can create other users)
 
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+    POST http://localhost:1337/v1/user/signup	
+		body		
+			email: :string, required: true
+			password: :string, required: true
+			confirmPassword: :string, required: true	
+		header 
+			Authorization bearer <token>

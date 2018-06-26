@@ -23,7 +23,27 @@ module.exports = {
       required: true,
       columnName: "encryptedPassword"
     },
-
+    firstName: {
+      type: "string",
+      minLength: 2
+    },
+    lastName: {
+      type: "string",
+      minLength: 2
+    },
+    userType: {
+      type: "string"
+    },
+    organization: {
+      type: "string",
+      minLength: 2
+    },
+    passwordResetToken: {
+      type: "string"
+    },
+    passwordResetTokenExpiresAt: {
+      type: "number"
+    },
     toJSON: function () {
       var obj = this.toObject();
       delete obj.password;

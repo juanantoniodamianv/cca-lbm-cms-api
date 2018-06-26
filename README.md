@@ -8,6 +8,7 @@ Instore Messaging Portal.
 ___
 
 
+
 |Description	|Method	|URL	|Parameters	|Body	|Header	|
 |-------------|-------|-----|-----------|-----|-------|
 |Create user (only administrators users, or superior role, can create other users)	|POST	|http://localhost:1337/v1/user/signup	|	|**email** (required), **password** (required), **confirmPassword** (required), firstName, lastName, userType, organization	|`Authorization bearer <token>`	|
@@ -29,6 +30,8 @@ HTTP Response, success example:
 		}
 	}
 ```
+
+
 
 |Description	|Method	|URL	|Parameters	|Body	|Header	|
 |-------------|-------|-----|-----------|-----|-------|
@@ -52,6 +55,8 @@ HTTP Response, success example:
 	}
 ```
 
+
+
 |Description	|Method	|URL	|Parameters	|Body	|Header	|
 |-------------|-------|-----|-----------|-----|-------|
 |Show user account	|GET	|http://localhost:1337/v1/user/id	|	|	|	|
@@ -69,6 +74,8 @@ HTTP Response, success example:
 		"id": "5b323a2f8035472511dd3234"
 	}
 ```
+
+
 
 |Description	|Method	|URL	|Parameters	|Body	|Header	|
 |-------------|-------|-----|-----------|-----|-------|

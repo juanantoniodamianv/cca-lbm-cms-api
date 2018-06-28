@@ -79,8 +79,28 @@ module.exports = {
       }
       return ResponseService.json(200, res, "User updated successfully", responseData)
     })
-  }
+  },
 
+  // Reset password
+  sendPasswordRecoveryEmail: async function (req, res, next) {
+    var userRecord = await User.findOne({email: req.body.email});
 
+    if (!userRecord) {
+      return ResponseService.json(401, res, "This email is not registered.")
+    }
 
+    var token = JwtService.issue({id: userRecord.id});
+    User.update({ id: userRecord.id }, {
+      passwordResetToken: token,
+      passwordResetTokenExpiresAt: Date.now() + 24*60*60*1000,
+    }).exec((err,update)=>{
+      if(err) {
+        throw new Error(err);
+      }
+    });
+
+    // Send recovery email
+    Mailer.sendPasswordResetEmail(userRecord, token);
+    return ResponseService.json(200, res, "The instruction to reset your password has been sent to your email.") 
+  },
 };

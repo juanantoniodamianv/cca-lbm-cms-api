@@ -39,10 +39,10 @@ module.exports = {
       minLength: 2
     },
     passwordResetToken: {
-      type: "string"
+      type: "string",
     },
     passwordResetTokenExpiresAt: {
-      type: "number"
+      type: "integer"
     },
     toJSON: function () {
       var obj = this.toObject();

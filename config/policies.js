@@ -23,7 +23,8 @@ module.exports.policies = {
   '*': ['isAuthorized'],
 
   'v1/UserController': {
-    'create': true
+    'create': true,
+    'sendPasswordRecoveryEmail': true
   },
 
   'v1/AuthController': {

@@ -112,3 +112,79 @@ HTTP Response, success example:
 		}
 	}
 ```
+
+
+
+|Description	|Method	|URL	|Parameters	|Body	|Header	|
+|-------------|-------|-----|-----------|-----|-------|
+|Update user accounts	|PUT	|http://localhost:1337/v1/user/id	|	|password, confirmPassword (required if password exists), firstName, lastName, userType, organization		|`Authorization bearer <token>`	|
+
+HTTP Response, success example: 
+
+**Status 200 Ok**
+```json
+{
+    "response": {
+        "message": "User updated successfully",
+        "data": {
+            "user": [
+                {
+					...
+                }
+            ]
+        }
+    }
+}
+```
+
+
+
+|Description	|Method	|URL	|Parameters	|Body	|Header	|
+|-------------|-------|-----|-----------|-----|-------|
+|Forgot password?	|POST	|http://localhost:1337/v1/forgot	|	|**email** (required)		|	|
+
+HTTP Response, success example: 
+
+**Status 200 Ok**
+```json
+	{
+		"response": {
+			"message": "The instruction to reset your password has been sent to your email."
+		}
+	}
+```
+
+**Status 401 Unauthorized**
+```json
+	{
+		"response": {
+			"message": "This email is not registered."
+		}
+	}
+```
+
+
+
+|Description	|Method	|URL	|Parameters	|Body	|Header	|
+|-------------|-------|-----|-----------|-----|-------|
+|Reset password	|POST	|http://localhost:1337/v1/reset	| token	|**password** (required), **confirmPassword** (required)		|	|
+
+HTTP Response, success example: 
+
+**Status 200 Ok**
+```json
+	{
+		"response": {
+			"message": "The instruction to reset your password has been sent to your email."
+		}
+	}
+```
+
+**Status 401 Unauthorized**
+```json
+	{
+		"response": {
+			"message": "The provided password token is invalid, expired, or has already been used."
+		}
+	}
+```

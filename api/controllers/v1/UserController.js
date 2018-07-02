@@ -103,4 +103,39 @@ module.exports = {
     Mailer.sendPasswordResetEmail(userRecord, token);
     return ResponseService.json(200, res, "The instruction to reset your password has been sent to your email.") 
   },
+
+  resetPassword: async function (req, res, next) {
+    // Is valid token?
+    var userRecord = await User.findOne({ passwordResetToken: req.param('token')});
+    //console.log(`User: ${userRecord.email}`);
+    if (!userRecord || userRecord === undefined || userRecord.passwordResetTokenExpiresAt <= Date.now()) {
+      return ResponseService.json(401, res, "The provided password token is invalid, expired, or has already been used.");
+    }
+
+    if (req.body.password !== req.body.confirmPassword) {
+      return ResponseService.json(401, res, "Password doesn't match")
+    }    
+    
+    /*
+    password,
+    confirmPassword,
+    passwordResetToken: '',
+    passwordExpiresAt: 0
+    */
+    var allowedParameters = [
+      "password", "passwordResetToken", "passwordResetTokenExpiresAt"
+    ]
+    req.body.passwordResetToken = '';
+    req.body.passwordResetTokenExpiresAt = 0;
+    var data = _.pick(req.body, allowedParameters);
+    
+    User.update(userRecord.id, data, function userUpdated (err, user) {
+      if (err) return ResponseService.json(400, res, "Password could not be updated", error.Errors)
+      var responseData = {
+        user: user
+      }
+      return ResponseService.json(200, res, "Password updated successfully", responseData)
+    });
+
+  } 
 };

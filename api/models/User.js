@@ -59,6 +59,18 @@ module.exports = {
     });
   },
 
+  beforeUpdate: function(values, cb){
+    if(values.password) {
+      bcrypt.hash(values.password, 10, function (err, hash) {
+        if (err) return cb(err);
+        values.password = hash;
+        cb();
+      })
+    } else {
+      cb();
+    }
+  },
+
   comparePassword: function (password, user) {
     return new Promise(function (resolve, reject) {
       bcrypt.compare(password, user.password, function (err, match) {

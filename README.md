@@ -1,45 +1,115 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+# CCA Api #
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+Instore Messaging Portal.
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+## API References ##
 
----
+## **USER**
+___
 
-## Edit a file
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+|Description	|Method	|URL	|Parameters	|Body	|Header	|
+|-------------|-------|-----|-----------|-----|-------|
+|Create user (only administrators users, or superior role, can create other users)	|POST	|http://localhost:1337/v1/user/signup	|	|**email** (required), **password** (required), **confirmPassword** (required), firstName, lastName, userType, organization	|`Authorization bearer <token>`	|
 
----
+HTTP Response, success example:
+```json
+	{
+		"response": {
+			"message": "User created successfully",
+			"data": {
+				"user": {
+					"email": "admin@admin.com",
+					"createdAt": "2018-06-25T12:22:52.613Z",
+					"updatedAt": "2018-06-25T12:22:52.613Z",
+					"id": "5b30de9c12f8c159e2c17afe"
+				},
+				"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViMzBkZTljMTJmOGMxNTllMmMxN2FmZSIsImlhdCI6MTUyOTkyOTM3MiwiZXhwIjoxNTI5OTQwMTcyfQ.TWE4AYVsT8zTMr5Mn-YtBGyrg4Y-IHyd5T0g05MELGQ"
+			}
+		}
+	}
+```
 
-## Create a file
 
-Next, you’ll add a new file to this repository.
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+|Description	|Method	|URL	|Parameters	|Body	|Header	|
+|-------------|-------|-----|-----------|-----|-------|
+|Sign In user account	|POST	|http://localhost:1337/v1/user/login	|	|**email** (required), **password** (required)	|	|
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+HTTP Response, success example:
+```json
+	{
+		"response": {
+			"message": "Successfully signed in",
+			"data": {
+				"user": {
+					"email": "admin@admin.com",
+					"createdAt": "2018-06-25T12:22:52.613Z",
+					"updatedAt": "2018-06-25T12:22:52.613Z",
+					"id": "5b30de9c12f8c159e2c17afe"
+				},
+				"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViMzBkZTljMTJmOGMxNTllMmMxN2FmZSIsImlhdCI6MTUyOTkyOTY2NSwiZXhwIjoxNTI5OTQwNDY1fQ.V2iWiAVIerebqLe2sce8kjveZRMHqPtdlVJagkJt6r4"
+			}
+		}
+	}
+```
 
----
 
-## Clone a repository
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+|Description	|Method	|URL	|Parameters	|Body	|Header	|
+|-------------|-------|-----|-----------|-----|-------|
+|Show user account	|GET	|http://localhost:1337/v1/user/id	|	|	|	|
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+HTTP Response, success example:
+```json
+	{
+		"email": "tonio@admin.com",
+		"firstName": "Juan Antonio Damian",
+		"lastName": "Vargas",
+		"userType": "administrator",
+		"organization": "Angus",
+		"createdAt": "2018-06-26T13:05:51.017Z",
+		"updatedAt": "2018-06-26T13:05:51.017Z",
+		"id": "5b323a2f8035472511dd3234"
+	}
+```
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+
+
+|Description	|Method	|URL	|Parameters	|Body	|Header	|
+|-------------|-------|-----|-----------|-----|-------|
+|Show all user accounts	|GET	|http://localhost:1337/v1/user	|	|	|	|
+
+HTTP Response, success example:
+```json
+	{
+		"response": {
+			"message": {
+				"users": [
+					{
+						"email": "admin@admin.com",
+						"firstName": "Admin",
+						"lastName": "Admin Admin",
+						"userType": "administrator",
+						"organization": "Angus",
+						"createdAt": "2018-06-26T13:05:33.724Z",
+						"updatedAt": "2018-06-26T13:05:33.724Z",
+						"id": "5b323a1d8035472511dd3233"
+					},
+					{
+						"email": "tonio@admin.com",
+						"firstName": "Juan Antonio Damian",
+						"lastName": "Vargas",
+						"userType": "administrator",
+						"organization": "Angus",
+						"createdAt": "2018-06-26T13:05:51.017Z",
+						"updatedAt": "2018-06-26T13:05:51.017Z",
+						"id": "5b323a2f8035472511dd3234"
+					}
+				]
+			}
+		}
+	}
+```
+>>>>>>> features/login

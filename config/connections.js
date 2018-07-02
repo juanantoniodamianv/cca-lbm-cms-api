@@ -60,7 +60,18 @@ module.exports.connections = {
     adapter: 'sails-mongo',
     host: 'localhost',
     port: 27017,
+    user: 'tonio_cca_api_dev',
+    password: 'admin34$826admin083',
     database: 'cca_api_dev' //optional
+  },
+
+  productionMongodbServer: {
+    adapter: 'sails-mongo',
+    host: 'localhost',
+    port: 27017,
+    user: 'cca_api_prod',
+    password: 'xPM6dL+PNX97#m5m',
+    database: 'cca_api_prod' //optional
   },
 
   /***************************************************************************

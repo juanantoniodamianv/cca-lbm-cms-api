@@ -7,4 +7,5 @@ module.exports.routes = {
   'put /v1/user/{id}': 'v1/UserController.update',
 
   'post /v1/forgot': 'v1/UserController.sendPasswordRecoveryEmail', // body: email 
+  'post /v1/reset': 'v1/UserController.resetPassword', //body: password, confirmPassword  params: token
 };

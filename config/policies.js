@@ -24,7 +24,8 @@ module.exports.policies = {
 
   'v1/UserController': {
     'create': true,
-    'sendPasswordRecoveryEmail': true
+    'sendPasswordRecoveryEmail': true,
+    'resetPassword': true
   },
 
   'v1/AuthController': {

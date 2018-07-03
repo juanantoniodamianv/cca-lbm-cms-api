@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 echo "$(date '+%F %T') rsyncing release folder with api folder" >> /home/ubuntu/deployment_logs/rsync.log 2>&1
-rsync -arv --delete \
+sudo rsync -arv --delete \
   /home/ubuntu/api-release/ \
   /home/ubuntu/cca-lbm-cms-api/ \
   >> /home/ubuntu/deployment_logs/rsync.log 2>&1

@@ -32,7 +32,10 @@ module.exports = {
       minLength: 2
     },
     userType: {
-      type: "string"
+      type: "string",
+      // contains: ['admin', 'normal'],
+      enum: ['admin', 'normal'],
+      defaultsTo: 'normal'
     },
     organization: {
       type: "string",

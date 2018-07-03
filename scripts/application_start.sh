@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 
 echo "$(date '+%F %T') rsyncing release folder with api folder" >> /home/ubuntu/deployment_logs/rsync.log 2>&1
 rsync -arv --delete \

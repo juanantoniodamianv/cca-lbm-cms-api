@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash
 
 cd /home/ubuntu/api-release
 npm install

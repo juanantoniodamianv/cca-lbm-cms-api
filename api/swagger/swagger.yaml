@@ -1,0 +1,49 @@
+swagger: "2.0"
+info: 
+  version: "1.0.0"
+  title: "CCA API"
+host: localhost:1337
+basePath: /v1/
+schemes: 
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  user/login:
+    post:
+      description: Access a user account
+      summary: User Account Access
+      operationId: LoginAccount
+      parameters:
+        - name: email
+          dataType: string
+          paramType: query
+          required: true
+          description: Your email
+        - name: password
+          dataType: string
+          paramType: query
+          required: true
+          description: Your password
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+              id:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+              
+              

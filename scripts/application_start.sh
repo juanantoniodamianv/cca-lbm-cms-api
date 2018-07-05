@@ -15,5 +15,17 @@ sudo rsync -arv --delete \
 #
 
 cd /home/ubuntu/cca-lbm-cms-api
-echo "$(date '+%F %T') Starting server" >> /home/ubuntu/deployment_logs/start_server.log 2>&1
-npm start --development >> /home/ubuntu/deployment_logs/start_server.log > /dev/null 2> /dev/null < /dev/null &
+
+SecurityGroup=`/usr/bin/curl -s http://169.254.169.254/latest/meta-data/security-groups`
+
+if [ "$SecurityGroup" = "cca-lbm-cms-api-production" ]; then
+  cd /home/ubuntu/cca-lbm-cms-api
+  echo "$(date '+%F %T') Starting server" >> /home/ubuntu/deployment_logs/start_server.log 2>&1
+  npm start --production >> /home/ubuntu/deployment_logs/start_server.log > /dev/null 2> /dev/null < /dev/null &
+fi
+
+if [ "$SecurityGroup" = "cca-lbm-cms-api-develop" ]; then
+  cd /home/ubuntu/cca-lbm-cms-api
+  echo "$(date '+%F %T') Starting server" >> /home/ubuntu/deployment_logs/start_server.log 2>&1
+  npm start --development >> /home/ubuntu/deployment_logs/start_server.log > /dev/null 2> /dev/null < /dev/null &
+fi

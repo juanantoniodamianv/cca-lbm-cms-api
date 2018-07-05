@@ -30,6 +30,10 @@ module.exports.policies = {
 
   'v1/AuthController': {
     '*': true
+  },
+
+  'TestController': {
+    '*': true
   }
 };
 

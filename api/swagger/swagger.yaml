@@ -1,0 +1,223 @@
+swagger: "2.0"
+info: 
+  version: "1.0.0"
+  title: "CCA API"
+host: localhost:1337
+basePath: /v1
+schemes: 
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /user/signup:
+    post:
+      summary: Creates a new user account.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: userSignUp
+          description: The user to create.
+          schema:
+            $ref: "#/definitions/UserSignUp"
+      responses:
+          200:
+            description: User created successfully.
+          401:
+            description: Password doesn't match.
+          400:
+            description: User could not be created.        
+  /user/login:
+    post:
+      summary: User Account Access.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: userLogin
+          description: Access a user account
+          schema:
+            $ref: "#/definitions/UserLogin"
+      responses:
+          200:
+            description: Successfully signed in.
+          401:
+            description: Invalid email or password.
+
+  /users:
+    get:
+      summary: Get all users account.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+      responses:
+          200:
+            description: Get all users account.
+          401:
+            description: No authorization header was found.
+
+  /user/{id}:
+    get:
+      summary: Get user account.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The user id.
+          type: string
+          required: true
+      responses:
+          200:
+            description: Get user account.
+          401:
+            description: No authorization header was found.
+    put:
+      summary: Update user account.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The user id.
+          type: string
+          required: true
+        - in: body
+          name: userUpdate
+          description: Update user account.
+          schema:
+            $ref: "#/definitions/UserUpdate"
+      responses:
+        200:
+          description: User updated succesfully.
+        400:
+          description: User could not be updated.
+
+  /forgot:
+    post:
+      summary: Forgot password.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: forgotPassword
+          description: The email account that you want to recover the password
+          schema:
+            $ref: "#/definitions/ForgotPassword"
+      responses:
+        200:
+          description: The instruction to reset your password has been sent to your email.
+        401:
+          description: This email is not registered.
+
+  /reset/{token}:
+    post:
+      summary: Reset password account
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: token
+          description: The token what has been sended on your email.
+          type: string
+          required: true
+        - in: body
+          name: resetPassword
+          description: Reset the password account.
+          schema:
+            $ref: "#/definitions/ResetPassword"
+      responses:
+        200:
+          description: Password successfully changed.
+        400:
+          description: Password could not be updated.
+        401:
+          description: The provided password token is invalid, expired, or has already been used.
+
+
+definitions:
+  UserSignUp:           
+    type: object
+    required:
+      - email
+      - password
+      - confirmPassword
+      - userType
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      confirmPassword:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      userType:
+        type: string
+      organization:
+        type: string
+  UserLogin:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  UserUpdate:
+    type: object
+    required:
+      - password
+      - confirmPassword
+      - userType
+    properties:
+      password:
+        type: string
+      confirmPassword:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      userType:
+        type: string
+      organization:
+        type: string
+  ForgotPassword:
+    type: object
+    required:
+      - email
+    properties:
+      email:
+        type: string
+  ResetPassword:
+    type: object
+    required:
+      - password
+      - confirmPassword
+    properties:
+      password:
+        type: string
+      confirmPassword:
+        type: string

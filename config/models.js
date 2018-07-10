@@ -17,7 +17,7 @@ module.exports.models = {
   * connections (see `config/connections.js`)                                *
   *                                                                          *
   ***************************************************************************/
-  connection: 'someMongodbServer',
+  //connection: 'someMongodbServer',
 
   /***************************************************************************
   *                                                                          *
@@ -27,6 +27,32 @@ module.exports.models = {
   * See http://sailsjs.org/#!/documentation/concepts/ORM/model-settings.html  *
   *                                                                          *
   ***************************************************************************/
-  migrate: 'safe'
+  migrate: 'safe',
+
+    /***************************************************************************
+  *                                                                          *
+  * Base attributes that are included in all of your models by default.      *
+  * By convention, this is your primary key attribute (`id`), as well as two *
+  * other timestamp attributes for tracking when records were last created   *
+  * or updated.                                                              *
+  *                                                                          *
+  * > For more info, see:                                                    *
+  * > https://sailsjs.com/docs/concepts/orm/model-settings#?attributes       *
+  *                                                                          *
+  ***************************************************************************/
+
+  attributes: {
+    createdAt: { type: 'number', autoCreatedAt: true, },
+    updatedAt: { type: 'number', autoUpdatedAt: true, },
+    id: { type: 'string', columnName: '_id' },
+    //--------------------------------------------------------------------------
+    //  /\   Using MongoDB?
+    //  ||   Replace `id` above with this instead:
+    //
+    // ```
+    // id: { type: 'string', columnName: '_id' },
+    // ```
+    //--------------------------------------------------------------------------
+  },
 
 };

@@ -32,6 +32,8 @@ module.exports = {
     }).catch(function (error) {
         if (error.invalidAttributes){
           return ResponseService.json(400, res, "User could not be created", error.Errors)
+        } else {
+          return ResponseService.json(403, res, "Forbidden")
         }
       }
     )

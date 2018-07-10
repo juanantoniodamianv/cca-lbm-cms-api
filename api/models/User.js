@@ -12,14 +12,13 @@ module.exports = {
 
   attributes: {
     email: {
-      type: "email",
+      type: "string",
       required: true,
       unique: true
     },
     password: {
       type: "string",
       minLength: 6,
-      protected: true,
       required: true,
       columnName: "encryptedPassword"
     },
@@ -42,13 +41,12 @@ module.exports = {
       type: "string",
     },
     passwordResetTokenExpiresAt: {
-      type: "integer"
+      type: "number"
     },
-    toJSON: function () {
-      var obj = this.toObject();
-      delete obj.password;
-      return obj;
-    }
+  },
+
+  customToJSON: function() {
+    return _.omit(this, 'password');
   },
 
   beforeCreate: function(values, cb){

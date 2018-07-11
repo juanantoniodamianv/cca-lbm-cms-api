@@ -6,13 +6,14 @@
  */
 
 var _ = require('lodash');
+var Mandrill = require('machinepack-mandrill');
 
 module.exports = {
   _config: {
     model: 'user'
   },
 
-  create: function (req, res) {
+  create: async function (req, res) {
     if (req.body.password !== req.body.confirmPassword) {
       return ResponseService.json(401, res, "Password doesn't match")
     }
@@ -23,20 +24,20 @@ module.exports = {
 
     var data = _.pick(req.body, allowedParameters);
 
-    User.create(data).then(function (user) {
-      var responseData = {
-        user: user,
-        token: JwtService.issue({id: user.id})
-      }
-      return ResponseService.json(200, res, "User created successfully", responseData)
-    }).catch(function (error) {
-        if (error.invalidAttributes){
-          return ResponseService.json(400, res, "User could not be created", error.Errors)
-        } else {
-          return ResponseService.json(403, res, "Forbidden")
-        }
-      }
-    )
+    var newUser = await User.create(data)
+      .intercept('E_UNIQUE', (err) => {
+        return ResponseService.json(400, res, "User could not be created: email already in use.", err)
+      })
+      .intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "User could not be created: invalid data.", err)
+      })
+      .fetch();
+    sails.log.info(newUser);
+    var responseData = {
+      user: newUser,
+      token: JwtService.issue({id: newUser.id})
+    }
+    return ResponseService.json(200, res, "User created successfully", responseData)
   },
 
   index: function (req, res, next) {
@@ -102,7 +103,8 @@ module.exports = {
     });
 
     // Send recovery email
-    Mailer.sendPasswordResetEmail(userRecord, token);
+    // Mailer.sendPasswordResetEmail(userRecord, token);
+    sendEmailForgotPassword(userRecord, token);
     return ResponseService.json(200, res, "The instruction to reset your password has been sent to your email.") 
   },
 
@@ -141,3 +143,23 @@ module.exports = {
 
   } 
 };
+
+function sendEmailForgotPassword(userRecord, token){
+  Mandrill.sendTemplateEmail({
+    apiKey: 'tctDZd_F9FWKd4Csq32LEg',
+    toEmail: userRecord.email,
+    templateName: 'forbiddenPasswordTemplate',
+    toName: userRecord.firstName + userRecord.lastName,
+    subject: 'Forgot password?',
+    message: `We have received a password reset request for your account at CCA-LBM-CMS. To reset yout password, click on the following link: Token: ${token}`,
+    fromEmail: 'support@ballastlane.com',
+    fromName: 'Ballastlane Support'
+  }).exec({
+    error: function (err){
+      sails.log.error('Error to send email');
+    },
+    success: function () {
+      sails.log.info('Yay! The instruction to reset your password has been sent to your email.');
+    },
+  });
+}

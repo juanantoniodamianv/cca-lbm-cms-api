@@ -14,7 +14,8 @@ module.exports = {
     email: {
       type: "string",
       required: true,
-      unique: true
+      unique: true,
+      columnType: 'string'
     },
     password: {
       type: "string",
@@ -31,7 +32,9 @@ module.exports = {
       minLength: 2
     },
     userType: {
-      type: "string"
+      type: "string",
+      isIn: ['admin', 'normal'],
+      defaultsTo: 'normal'
     },
     organization: {
       type: "string",
@@ -49,7 +52,7 @@ module.exports = {
     return _.omit(this, 'password');
   },
 
-  beforeCreate: function(values, cb){
+  beforeCreate: async (values, cb) => {
     bcrypt.hash(values.password, 10, function (err, hash) {
       if (err) return cb(err);
       values.password = hash;
@@ -81,7 +84,13 @@ module.exports = {
         }
       })
     });
-  }
+  },
+
+/*   findUser: async (email) => {
+    var userRecord = await User.findOne({email});
+    //sails.log.info(userRecord);
+    return userRecord;
+  }, */
 
 };
 

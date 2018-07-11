@@ -30,7 +30,7 @@ paths:
           400:
             description: User could not be created.        
   /user/login:
-    post:
+    put:
       summary: User Account Access.
       consumes:
         - application/json

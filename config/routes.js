@@ -12,14 +12,7 @@ module.exports.routes = {
       csrf: false
     }
   ], */
-  //'v1/AuthController.login',
-  'put /v1/user/login': {
-    controller: 'v1/AuthController',
-    action: 'login',
-    cors: false,
-    csrf: false 
-  },
-  //'put /v1/user/login': 'v1/AuthController.login',
+  'put /v1/user/login': 'v1/AuthController.login',
   'post /v1/user/signup': 'v1/UserController.create',
   'get /v1/users': 'v1/UserController.index',
   'get /v1/user/{id}': 'v1/UserController.show',

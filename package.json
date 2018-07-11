@@ -26,5 +26,8 @@
     "url": "git://github.com/timi/auth-example.git"
   },
   "author": "timi",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  }
 }

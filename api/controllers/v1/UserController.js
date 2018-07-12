@@ -6,13 +6,17 @@
  */
 
 var _ = require('lodash');
+/* var mandrill = require('mandrill-api/mandrill');
+var mandrill_client = new mandrill.Mandrill('tctDZd_F9FWKd4Csq32LEg'); */
+/* var Mandrill = require('machinepack-mandrill');
+ */
 
 module.exports = {
   _config: {
     model: 'user'
   },
 
-  create: function (req, res) {
+  create: async function (req, res) {
     if (req.body.password !== req.body.confirmPassword) {
       return ResponseService.json(401, res, "Password doesn't match")
     }
@@ -23,18 +27,20 @@ module.exports = {
 
     var data = _.pick(req.body, allowedParameters);
 
-    User.create(data).then(function (user) {
-      var responseData = {
-        user: user,
-        token: JwtService.issue({id: user.id})
-      }
-      return ResponseService.json(200, res, "User created successfully", responseData)
-    }).catch(function (error) {
-        if (error.invalidAttributes){
-          return ResponseService.json(400, res, "User could not be created", error.Errors)
-        }
-      }
-    )
+    var newUser = await User.create(data)
+      .intercept('E_UNIQUE', (err) => {
+        return ResponseService.json(400, res, "User could not be created: email already in use.", err)
+      })
+      .intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "User could not be created: invalid data.", err)
+      })
+      .fetch();
+    sails.log.info(newUser);
+    var responseData = {
+      user: newUser,
+      token: JwtService.issue({id: newUser.id})
+    }
+    return ResponseService.json(200, res, "User created successfully", responseData)
   },
 
   index: function (req, res, next) {
@@ -100,7 +106,7 @@ module.exports = {
     });
 
     // Send recovery email
-    Mailer.sendPasswordResetEmail(userRecord, token);
+    User.sendEmailForgotPassword(userRecord, token);
     return ResponseService.json(200, res, "The instruction to reset your password has been sent to your email.") 
   },
 

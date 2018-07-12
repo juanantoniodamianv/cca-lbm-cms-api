@@ -2,7 +2,7 @@ swagger: "2.0"
 info: 
   version: "1.0.0"
   title: "CCA API"
-host: localhost:1337
+host: localhost:1337 #cca-lbm-api-dev.ballastlane.com
 basePath: /v1
 schemes: 
   - http
@@ -30,7 +30,7 @@ paths:
           400:
             description: User could not be created.        
   /user/login:
-    post:
+    put:
       summary: User Account Access.
       consumes:
         - application/json

@@ -8,7 +8,7 @@
     "bcrypt": "^3.0.0",
     "include-all": "~0.1.6",
     "jsonwebtoken": "^8.2.1",
-    "machinepack-mandrill": "^1.2.0",
+    "mandrill-api": "^1.0.45",
     "rc": "^1.2.8",
     "sails": "^1.0.2",
     "sails-disk": "^1.0.1",

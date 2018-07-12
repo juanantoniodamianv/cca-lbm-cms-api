@@ -6,7 +6,10 @@
  */
 
 var _ = require('lodash');
-var Mandrill = require('machinepack-mandrill');
+/* var mandrill = require('mandrill-api/mandrill');
+var mandrill_client = new mandrill.Mandrill('tctDZd_F9FWKd4Csq32LEg'); */
+/* var Mandrill = require('machinepack-mandrill');
+ */
 
 module.exports = {
   _config: {
@@ -103,8 +106,7 @@ module.exports = {
     });
 
     // Send recovery email
-    // Mailer.sendPasswordResetEmail(userRecord, token);
-    sendEmailForgotPassword(userRecord, token);
+    User.sendEmailForgotPassword(userRecord, token);
     return ResponseService.json(200, res, "The instruction to reset your password has been sent to your email.") 
   },
 
@@ -143,23 +145,3 @@ module.exports = {
 
   } 
 };
-
-function sendEmailForgotPassword(userRecord, token){
-  Mandrill.sendTemplateEmail({
-    apiKey: 'tctDZd_F9FWKd4Csq32LEg',
-    toEmail: userRecord.email,
-    templateName: 'forbiddenPasswordTemplate',
-    toName: userRecord.firstName + userRecord.lastName,
-    subject: 'Forgot password?',
-    message: `We have received a password reset request for your account at CCA-LBM-CMS. To reset yout password, click on the following link: Token: ${token}`,
-    fromEmail: 'support@ballastlane.com',
-    fromName: 'Ballastlane Support'
-  }).exec({
-    error: function (err){
-      sails.log.error('Error to send email');
-    },
-    success: function () {
-      sails.log.info('Yay! The instruction to reset your password has been sent to your email.');
-    },
-  });
-}

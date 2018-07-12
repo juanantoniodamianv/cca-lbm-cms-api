@@ -6,7 +6,9 @@
  */
 
 var Promise = require("bluebird");
-var bcrypt = require("bcrypt")
+var bcrypt = require("bcrypt");
+var mandrill = require('mandrill-api/mandrill');
+var mandrill_client = new mandrill.Mandrill('tctDZd_F9FWKd4Csq32LEg');
 
 module.exports = {
 
@@ -91,6 +93,42 @@ module.exports = {
     //sails.log.info(userRecord);
     return userRecord;
   }, */
+
+  sendEmailForgotPassword: (userRecord, token) => {
+    let url = "https://cca-lbm-dev.ballastlane.com/reset?token=" + token;
+    let receiveName = userRecord.lastName || userRecord.firstName || userRecord.email;
+    var message = {
+      "html": "<div><p>Dear " + receiveName + "</p><p>Hi! We recently had a request to reset your account password at CCA-CMS.</p><p>If you see that the above information is not correct, contact us at support@ballastlane.com</p></div><div><p>To reset your password account, click on the following link <a href='" + url + "'>here</a></p></div>",
+      "subject": "Forgot password?",
+      "from_email": "support@ballastlane.com",
+      "from_name": "Support Ballastlane - CCA CMS",
+      "to": [{
+        "email": userRecord.email,
+        "name": userRecord.lastName + ', ' + userRecord.firstName,
+        "type": "to"
+      }],
+      "important": true,
+      "tags": [
+        "password-resets"
+      ],
+    };
+    var async = false;
+    mandrill_client.messages.send({"message": message, "async": async}, (result) => {
+      console.log(result);
+      /*
+      [{
+              "email": "recipient.email@example.com",
+              "status": "sent",
+              "reject_reason": "hard-bounce",
+              "_id": "abc123abc123abc123abc123abc123"
+          }]
+      */
+    }, (e) => {
+      // Mandrill returns the error as an object with name and message keys
+      console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+      // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+    });
+  },
 
 };
 

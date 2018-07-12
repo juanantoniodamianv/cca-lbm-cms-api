@@ -5,18 +5,18 @@ files:
     destination: /home/ubuntu/api-release
 permissions:
   - object: /home/ubuntu/api-release
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh
       timeout: 300
-      runas: root
+      runas: ubuntu
   AfterInstall:
     - location: scripts/after_install.sh
       timeout: 300
-      runas: root
+      runas: ubuntu
   ApplicationStart:
     - location: scripts/application_start.sh
       timeout: 300
-      runas: root
+      runas: ubuntu

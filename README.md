@@ -35,7 +35,7 @@ HTTP Response, success example:
 
 |Description	|Method	|URL	|Parameters	|Body	|Header	|
 |-------------|-------|-----|-----------|-----|-------|
-|Sign In user account	|POST	|http://localhost:1337/v1/user/login	|	|**email** (required), **password** (required)	|	|
+|Sign In user account	|PUT	|http://localhost:1337/v1/user/login	|	|**email** (required), **password** (required)	|	|
 
 HTTP Response, success example:
 ```json

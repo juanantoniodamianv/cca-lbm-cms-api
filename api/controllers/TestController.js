@@ -9,7 +9,7 @@ module.exports = {
   
   isOk: (req, res) => {
 
-    return ResponseService.json(200, res, "Server is ok.")
+    return ResponseService.json(200, res, "Yay! Server is ok.")
 
   },
 };

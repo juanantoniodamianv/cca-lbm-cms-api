@@ -54,7 +54,7 @@ module.exports = {
   },
 
   show: function (req, res, next) {
-    User.findOne(req.params('id'), function foundUser (err, user) {
+    User.findOne(req.param('id'), function foundUser (err, user) {
       if (err) return next(err);
       if (!user) return next();
       var responseData = {
@@ -67,7 +67,7 @@ module.exports = {
   // Render the edit view - not for api
 
   edit: function (req, res, next) {
-    User.findOne(req.params('id'), function foundUser (err, user) {
+    User.findOne(req.param('id'), function foundUser (err, user) {
       if (err) return next(err);
       if (!user) return next('User doesn\'t exist.');
       var responseData = {
@@ -78,7 +78,7 @@ module.exports = {
   },
 
   update: function (req, res, next) {
-    User.update(req.param('id'), req.params.all(), function userUpdated (err, user) {
+    User.update(req.param('id'), req.allParams(), function userUpdated (err, user) {
       if (err) return ResponseService.json(400, res, "User could not be updated", error.Errors)
       var responseData = {
         user: user

@@ -29,3 +29,5 @@ if [ "$SecurityGroup" = "cca-lbm-cms-api-develop" ]; then
   echo "$(date '+%F %T') Starting server" >> /home/ubuntu/deployment_logs/start_server.log 2>&1
   npm start --development >> /home/ubuntu/deployment_logs/start_server.log > /dev/null 2> /dev/null < /dev/null &
 fi
+
+sudo service nginx start >> /home/ubuntu/deployment_logs/start_server.log 2>&1

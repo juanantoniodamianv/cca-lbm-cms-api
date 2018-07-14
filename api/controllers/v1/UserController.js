@@ -87,6 +87,18 @@ module.exports = {
     })
   },
 
+  /* Destroy user account */
+  destroy: (req, res, next) => {
+    if (!(User.isAdmin(req.current_user))) return ResponseService.json(400, res, "You need administrator privileges to perform this action.");
+    User.destroy(req.param('id'), function userDestroyed (err, user){
+      if (err) return ResponseService.json(400, res, "User could not be destroyed", error.Errors)
+      var responseData = {
+        user
+      }
+      return ResponseService.json(200, res, "User destroyed succesfully", responseData)
+    })
+  },
+
   // Reset password
   sendPasswordRecoveryEmail: async function (req, res, next) {
     var userRecord = await User.findOne({email: req.body.email});

@@ -94,6 +94,10 @@ module.exports = {
     return userRecord;
   }, */
 
+  isAdmin: (current_user) => {
+    return current_user.userType !== 'admin' ? false : true; 
+  },
+
   sendEmailForgotPassword: (userRecord, token) => {
     let url = "https://cca-lbm-dev.ballastlane.com/#/reset?token=" + token;
     let receiveName = userRecord.lastName || userRecord.firstName || userRecord.email;

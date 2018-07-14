@@ -17,6 +17,7 @@ module.exports = {
   },
 
   create: async function (req, res) {
+    //if (!(User.isAdmin(req.current_user))) return ResponseService.json(400, res, "You need administrator privileges to perform this action.");
     if (req.body.password !== req.body.confirmPassword) {
       return ResponseService.json(401, res, "Password doesn't match")
     }

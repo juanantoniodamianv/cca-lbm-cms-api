@@ -65,6 +65,17 @@ module.exports = {
     });
   },
 
+  me: (req, res, next) => {
+    User.findOne({ email: req.current_user.email }, function foundUser (err, user) {
+      if (err) return next(err);
+      if (!user) return next();
+      var responseData = {
+        user
+      }
+      return ResponseService.json(200, res, responseData)
+    });
+  },
+
   // Render the edit view - not for api
 
   edit: function (req, res, next) {

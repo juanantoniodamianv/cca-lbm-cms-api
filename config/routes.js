@@ -16,6 +16,7 @@ module.exports.routes = {
   'post /v1/user/signup': 'v1/UserController.create',
   'get /v1/users': 'v1/UserController.index',
   'get /v1/user/:id': 'v1/UserController.show',
+  'get /v1/user/me': 'v1/UserController.me',
   'put /v1/user/:id': 'v1/UserController.update',
   'delete /v1/user/:id': 'v1/UserController.destroy',
 

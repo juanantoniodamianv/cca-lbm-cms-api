@@ -54,7 +54,10 @@ module.exports = {
     User.find(options, function foundUsers (err, users) {
       if (err) return next(err);
       var responseData = {
-        users: users
+        users,
+        skip: options.skip,
+        limit: options.limit,
+        total: users.length
       }
       return ResponseService.json(200, res, responseData)
     });

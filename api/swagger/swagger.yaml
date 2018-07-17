@@ -208,6 +208,7 @@ definitions:
         type: string
       userType:
         type: string
+        description: Type of role admin or normal.
       organization:
         type: string
   UserLogin:

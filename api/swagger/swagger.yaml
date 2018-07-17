@@ -57,6 +57,21 @@ paths:
           description: Authorization token.
           type: string
           required: true
+        - in: query
+          name: limit
+          description: Set the maximum number of records to retrieve.
+          type: number
+          required: false
+        - in: query
+          name: skip
+          description: Indicate a number of records to skip before returning the results.
+          type: number
+          required: false
+        - in: query
+          name: sort
+          description: Set the order in which retrieved records should be returned. Please mention here, columnName followed by space with desc or asc.
+          type: string
+          required: false
       responses:
           200:
             description: Get all users account.
@@ -109,6 +124,26 @@ paths:
           description: User updated succesfully.
         400:
           description: User could not be updated.
+    delete:
+      summary: Delete user account.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token. You need provided administrator account to perform this action.
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The user id.
+          type: string
+          required: true
+      responses:
+        200:
+          description: User destroyed succesfully.
+        400:
+          description: User could not be destroyed.
 
   /forgot:
     post:
@@ -173,6 +208,7 @@ definitions:
         type: string
       userType:
         type: string
+        description: Type of role admin or normal.
       organization:
         type: string
   UserLogin:

@@ -18,6 +18,7 @@ module.exports.routes = {
   'get /v1/user/:id': 'v1/UserController.show',
   'put /v1/user/:id': 'v1/UserController.update',
   'delete /v1/user/:id': 'v1/UserController.destroy',
+  'get /v1/me': 'v1/UserController.getMe',
 
   'post /v1/forgot': 'v1/UserController.sendPasswordRecoveryEmail', // body: email 
   'post /v1/reset': 'v1/UserController.resetPassword', //body: password, confirmPassword  params: token

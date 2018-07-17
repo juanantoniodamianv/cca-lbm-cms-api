@@ -45,10 +45,19 @@ module.exports = {
   },
 
   index: function (req, res, next) {
-    User.find(function foundUsers (err, users) {
+    var options = {
+      limit: req.param('limit') || undefined,
+      skip: req.param('skip') || undefined,
+      sort: req.param('sort') || "createdAt desc", // columnName desc||asc
+      where: req.param('where') || undefined
+    };
+    User.find(options, function foundUsers (err, users) {
       if (err) return next(err);
       var responseData = {
-        users: users
+        users,
+        skip: options.skip,
+        limit: options.limit,
+        total: users.length
       }
       return ResponseService.json(200, res, responseData)
     });
@@ -60,6 +69,17 @@ module.exports = {
       if (!user) return next();
       var responseData = {
         user: user
+      }
+      return ResponseService.json(200, res, responseData)
+    });
+  },
+
+  getMe: (req, res, next) => {
+    User.findOne({ email: req.current_user.email }, function foundUser (err, user) {
+      if (err) return next(err);
+      if (!user) return next();
+      var responseData = {
+        user
       }
       return ResponseService.json(200, res, responseData)
     });

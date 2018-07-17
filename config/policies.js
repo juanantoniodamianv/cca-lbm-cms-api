@@ -27,8 +27,12 @@ module.exports.policies = {
     'sendPasswordRecoveryEmail': true,
     'resetPassword': true
   },
-
+   
   'v1/AuthController': {
+    '*': true
+  },
+
+  'TestController': {
     '*': true
   }
 };

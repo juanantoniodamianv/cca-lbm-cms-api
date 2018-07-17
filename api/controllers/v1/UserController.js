@@ -6,13 +6,18 @@
  */
 
 var _ = require('lodash');
+/* var mandrill = require('mandrill-api/mandrill');
+var mandrill_client = new mandrill.Mandrill('tctDZd_F9FWKd4Csq32LEg'); */
+/* var Mandrill = require('machinepack-mandrill');
+ */
 
 module.exports = {
   _config: {
     model: 'user'
   },
 
-  create: function (req, res) {
+  create: async function (req, res) {
+    //if (!(User.isAdmin(req.current_user))) return ResponseService.json(400, res, "You need signed in with an administrator user type to perform this action.");
     if (req.body.password !== req.body.confirmPassword) {
       return ResponseService.json(401, res, "Password doesn't match")
     }
@@ -23,32 +28,43 @@ module.exports = {
 
     var data = _.pick(req.body, allowedParameters);
 
-    User.create(data).then(function (user) {
-      var responseData = {
-        user: user,
-        token: JwtService.issue({id: user.id})
-      }
-      return ResponseService.json(200, res, "User created successfully", responseData)
-    }).catch(function (error) {
-        if (error.invalidAttributes){
-          return ResponseService.json(400, res, "User could not be created", error.Errors)
-        }
-      }
-    )
+    var newUser = await User.create(data)
+      .intercept('E_UNIQUE', (err) => {
+        return ResponseService.json(400, res, "User could not be created: email already in use.", err)
+      })
+      .intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "User could not be created: invalid data.", err)
+      })
+      .fetch();
+    sails.log.info(newUser);
+    var responseData = {
+      user: newUser,
+      token: JwtService.issue({id: newUser.id})
+    }
+    return ResponseService.json(200, res, "User created successfully", responseData)
   },
 
   index: function (req, res, next) {
-    User.find(function foundUsers (err, users) {
+    var options = {
+      limit: req.param('limit') || undefined,
+      skip: req.param('skip') || undefined,
+      sort: req.param('sort') || "createdAt desc", // columnName desc||asc
+      where: req.param('where') || undefined
+    };
+    User.find(options, function foundUsers (err, users) {
       if (err) return next(err);
       var responseData = {
-        users: users
+        users,
+        skip: options.skip,
+        limit: options.limit,
+        total: users.length
       }
       return ResponseService.json(200, res, responseData)
     });
   },
 
   show: function (req, res, next) {
-    User.findOne(req.params('id'), function foundUser (err, user) {
+    User.findOne(req.param('id'), function foundUser (err, user) {
       if (err) return next(err);
       if (!user) return next();
       var responseData = {
@@ -58,10 +74,21 @@ module.exports = {
     });
   },
 
+  getMe: (req, res, next) => {
+    User.findOne({ email: req.current_user.email }, function foundUser (err, user) {
+      if (err) return next(err);
+      if (!user) return next();
+      var responseData = {
+        user
+      }
+      return ResponseService.json(200, res, responseData)
+    });
+  },
+
   // Render the edit view - not for api
 
   edit: function (req, res, next) {
-    User.findOne(req.params('id'), function foundUser (err, user) {
+    User.findOne(req.param('id'), function foundUser (err, user) {
       if (err) return next(err);
       if (!user) return next('User doesn\'t exist.');
       var responseData = {
@@ -72,12 +99,24 @@ module.exports = {
   },
 
   update: function (req, res, next) {
-    User.update(req.param('id'), req.params.all(), function userUpdated (err, user) {
+    User.update(req.param('id'), req.allParams(), function userUpdated (err, user) {
       if (err) return ResponseService.json(400, res, "User could not be updated", error.Errors)
       var responseData = {
         user: user
       }
       return ResponseService.json(200, res, "User updated successfully", responseData)
+    })
+  },
+
+  /* Destroy user account */
+  destroy: (req, res, next) => {
+    if (!(User.isAdmin(req.current_user))) return ResponseService.json(400, res, "You need administrator privileges to perform this action.");
+    User.destroy(req.param('id'), function userDestroyed (err, user){
+      if (err) return ResponseService.json(400, res, "User could not be destroyed", error.Errors)
+      var responseData = {
+        user
+      }
+      return ResponseService.json(200, res, "User destroyed succesfully", responseData)
     })
   },
 
@@ -100,7 +139,7 @@ module.exports = {
     });
 
     // Send recovery email
-    Mailer.sendPasswordResetEmail(userRecord, token);
+    User.sendEmailForgotPassword(userRecord, token);
     return ResponseService.json(200, res, "The instruction to reset your password has been sent to your email.") 
   },
 

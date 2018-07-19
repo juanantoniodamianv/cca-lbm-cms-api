@@ -14,7 +14,7 @@ module.exports = {
       unique: true
     },
     contactEmail: {
-      type: "email",
+      type: "string",
       required: true,
     },
     locationNumber: {
@@ -44,11 +44,12 @@ module.exports = {
       type: "boolean",
       defaultsTo: true
     },
-    toJSON: () => {
-      var obj = this.toObject();
-      return obj;
-    }
   },
+
+  customToJSON: () => {
+    var obj = this.toObject();
+    return obj;
+  }
 
 };
 

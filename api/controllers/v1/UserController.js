@@ -48,8 +48,8 @@ module.exports = {
     var options = {
       limit: req.param('limit') || undefined,
       skip: req.param('skip') || undefined,
-      sort: req.param('sort') || "createdAt desc", // columnName desc||asc
-      where: req.param('where') || undefined
+      sort: req.param('sort') || "createdAt desc" // columnName desc||asc
+      // where: req.param('where') || undefined
     };
     User.find(options, function foundUsers (err, users) {
       if (err) return next(err);
@@ -57,6 +57,26 @@ module.exports = {
         users,
         skip: options.skip,
         limit: options.limit,
+        total: users.length
+      }
+      return ResponseService.json(200, res, responseData)
+    });
+  },
+
+  search: (req, res, next) => {
+    var searchObj = {};
+    searchObj[req.param('criteria')] = req.param('value');
+    sails.log.info(searchObj);
+    let criteria = req.param('criteria');
+    let value = req.param('value');
+    sails.log.info(criteria);
+    sails.log.info(value);
+    User.find()
+    .where({ criteria : { contains : value } })
+    .exec((err, users) => {
+      if (err) return next(err);
+      var responseData = {
+        users, 
         total: users.length
       }
       return ResponseService.json(200, res, responseData)
@@ -100,7 +120,7 @@ module.exports = {
 
   update: function (req, res, next) {
     User.update(req.param('id'), req.allParams(), function userUpdated (err, user) {
-      if (err) return ResponseService.json(400, res, "User could not be updated", error.Errors)
+      if (err) return ResponseService.json(400, res, "User could not be updated", err.Errors)
       var responseData = {
         user: user
       }
@@ -112,7 +132,7 @@ module.exports = {
   destroy: (req, res, next) => {
     if (!(User.isAdmin(req.current_user))) return ResponseService.json(400, res, "You need administrator privileges to perform this action.");
     User.destroy(req.param('id'), function userDestroyed (err, user){
-      if (err) return ResponseService.json(400, res, "User could not be destroyed", error.Errors)
+      if (err) return ResponseService.json(400, res, "User could not be destroyed", err.Errors)
       var responseData = {
         user
       }

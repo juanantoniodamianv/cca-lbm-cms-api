@@ -11,13 +11,11 @@ module.exports = {
     title: {
       type: "string",
       required: true,
-      notNull: true,
       unique: true
     },
     message: {
       type: "string",
       required: true,
-      notNull: true,
       maxLength: 250
 
     },
@@ -25,16 +23,17 @@ module.exports = {
       type: "string",
 
     },
-    locations: {
-      collection: 'location',
+/*     locations: {
+      collection: 'locations',
       via: 'messages',
       dominant: true      
-    },
-    toJSON: function () {
-      var obj = this.toObject();
-      return obj;
-    }
+    }, */
   },
+
+  customToJSON: () => {
+    var obj = this.toObject();
+    return obj;
+  }
 
 };
 

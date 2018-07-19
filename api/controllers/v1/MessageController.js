@@ -34,5 +34,33 @@ module.exports = {
 			})
 	},
 
+	update: (req, res) => {
+		Message.update(req.param('id'), req.allParams(), (err, message) => {
+			if (err) return ResponseService.json(400, res, "Message could not be updated", error.Errors)
+			var responseData = {
+				message
+			}
+			return ResponseService.json(200, res, "Message updated succesfully", responseData)
+		})
+	},
+
+	destroy: (req, res) => {
+		Message.destroy(req.param('id'), (err, message) => {
+			if (err) return ResponseService.json(400, res, "Message could not be destroyed", err.Errors)
+			var responseData = {
+				message
+			}
+			return ResponseService.json(200, res, "Message destroyed succesfully", responseData)
+		})
+	},
+
+	index: (req, res, next) => {},
+
+	show: (req, res, next) => {
+		
+	},
+
+
+
 };
 

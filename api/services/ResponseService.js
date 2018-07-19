@@ -1,5 +1,5 @@
 /**
- * ResponseService.js
+ * services/ResponseService.js
  */
 module.exports = {
     json: function (status, res, message, data, meta) {

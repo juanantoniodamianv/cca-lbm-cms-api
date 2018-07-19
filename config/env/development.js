@@ -17,8 +17,18 @@ module.exports = {
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
 
-  models: {
-    connection: 'someMongodbServer'
-  }
+  /* models: {
+    connection: 'default'
+  }, */
+  datastores: {
+    default: {
+      adapter: 'sails-mongo',
+      host: 'localhost',
+      port: 27017,
+      user: 'tonio_cca_api_dev',
+      password: 'admin34$826admin083',
+      database: 'cca_api_dev' 
+    }
+  },
 
 };

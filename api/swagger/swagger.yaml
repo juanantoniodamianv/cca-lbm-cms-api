@@ -1,14 +1,11 @@
 swagger: "2.0"
 info: 
   version: "1.0.0"
-  title: "CCA LBM API"
-  contact:
-    name: Ballastlane Applications
-    url: https://ballastlane.com
+  title: "CCA-LBM API Documentation"
 host: cca-lbm-api-dev.ballastlane.com
 basePath: /v1
 schemes: 
-  - http
+  - https
 consumes:
   - application/json
 produces:

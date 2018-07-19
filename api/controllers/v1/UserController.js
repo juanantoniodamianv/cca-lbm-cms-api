@@ -83,12 +83,12 @@ module.exports = {
     });
   },
 
-  show: function (req, res, next) {
-    User.findOne(req.param('id'), function foundUser (err, user) {
+  show: (req, res, next) => {
+    User.findOne(req.param('id'), (err, user) => {
       if (err) return next(err);
-      if (!user) return next();
+      if (!user) return ResponseService.json(404, res, "User not exist.", err)
       var responseData = {
-        user: user
+        user
       }
       return ResponseService.json(200, res, responseData)
     });

@@ -89,10 +89,17 @@ module.exports = {
 	},
 
 	show: (req, res, next) => {
-		
+		Message.findOne(req.param('id'), (err, message) => {
+			if (err) return next(err);
+			if (!message) return next();
+			var responseData = {
+				message
+			}
+			return ResponseService.json(200, res, responseData)
+		});
 	},
 
-
+	
 
 };
 

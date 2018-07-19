@@ -11,27 +11,43 @@ module.exports = {
 		model: 'message'
 	},  
 
-	create: (req, res) => {
+	create: async (req, res) => {
 		if (!req.body.title || !req.body.message) return ResponseService.json(401, res, "Title and message attributes are required.");
 		var allowedParameters = [
-			"title", "message", "deeplink", "locations"
+			//"title", "message", "deeplink", "locations"
+			"title", "message", "deeplink"
 		]
 		var data = _.pick(req.body, allowedParameters);
+		sails.log.info("Entré");
 
-		Message.create(data)
+		var newMessage = await Message.create(data)
+			.intercept('E_UNIQUE', (err) => {
+				return ResponseService.json(400, res, "Message could not be created: title is already create.", err)
+			})
+			.intercept('UsageError', (err) =>{
+				return ResponseService.json(400, res, "Message could not be created: invalid data.", err)				
+			})
+			.fetch();
+			sails.log(newMessage);
+			var responseData = {
+				message: newMessage
+			}
+			return ResponseService.json(200, res, "Message created succesfully.", responseData)
+
+		/* Message.create(data)
 			.then((message) => {
 				var responseData = {
 					message
 				}
 
-				message.locations.add(req.params('locations'));
+				//message.locations.add(req.params('locations'));
 				return ResponseService.json(200, res, "Message created succesfully.", responseData)
 			})
 			.catch( error => {
 				if (error.invalidAttributes){
           return ResponseService.json(400, res, "Message could not be created", error.Errors)
         }
-			})
+			}) */
 	},
 
 	update: (req, res) => {
@@ -54,7 +70,23 @@ module.exports = {
 		})
 	},
 
-	index: (req, res, next) => {},
+	index: (req, res, next) => {
+		var options = {
+			limit: req.param('limit') || undefined,
+			skip: req.param('skip') || undefined,
+			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
+		};
+		Message.find(options, (err, messages) => {
+			if (err) return next(err);
+			var responseData = {
+				messages,
+				skip: options.skip,
+				limit: options.limit,
+				total: messages.length
+			}
+			return ResponseService.json(200, res, responseData)
+		});
+	},
 
 	show: (req, res, next) => {
 		

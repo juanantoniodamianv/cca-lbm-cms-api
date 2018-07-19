@@ -30,9 +30,8 @@ module.exports = {
     }, */
   },
 
-  customToJSON: () => {
-    var obj = this.toObject();
-    return obj;
+  customToJSON: function () {
+    return this;
   }
 
 };

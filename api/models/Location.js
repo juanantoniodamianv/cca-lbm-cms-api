@@ -11,19 +11,22 @@ module.exports = {
     name: {
       type: "string",
       required: true,
-      unique: true
+      unique: true,
+      columnType: 'string'
     },
     contactEmail: {
       type: "string",
       required: true,
     },
     locationNumber: {
-      type: "integer",
+      type: "number",
       required: true,
     },
     memberId: {
       type: "string",
       required: true,
+      unique: true,
+      columnType: 'string'
     },
     address1: {
       type: "string"
@@ -38,17 +41,20 @@ module.exports = {
       type: "string"
     },
     postalCode: {
-      type: "integer"
+      type: "number"
     },
     active: {
       type: "boolean",
       defaultsTo: true
     },
+    messages: {
+      collection: 'message',
+      via: 'locations'
+    }
   },
 
-  customToJSON: () => {
-    var obj = this.toObject();
-    return obj;
+  customToJSON: function () {
+    return this;
   }
 
 };

@@ -186,6 +186,51 @@ paths:
         401:
           description: The provided password token is invalid, expired, or has already been used.
 
+  /message:
+    post:
+      summary: Create new message
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: body
+          name: newMessage
+          description: The new message
+          schema:
+            $ref: "#/definitions/MessageNew"
+      responses:
+        200:
+          description: Message created succesfully
+        404:
+          description: Message could not be created, title is already create.
+        400:
+          description: Message could not be created, invalid data.
+
+    put:
+      summary: Update message
+      consumes: 
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The message id.
+          type: string
+          required: true
+        - in: body
+          name: updateMessage
+          description: Update the message
+          schema:
+            $ref: "#/definitions/MessageUpdate"      
+
 
 definitions:
   UserSignUp:           
@@ -256,4 +301,15 @@ definitions:
       password:
         type: string
       confirmPassword:
+        type: string
+  MessageNew:
+    type: object
+    required:
+      - title
+    properties:
+      title:
+        type: string
+      message:
+        type: string
+      deeplink:
         type: string

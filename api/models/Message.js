@@ -23,11 +23,10 @@ module.exports = {
       type: "string",
 
     },
-/*     locations: {
-      collection: 'locations',
-      via: 'messages',
-      dominant: true      
-    }, */
+    locations: {
+      collection: 'location',
+      via: 'messages'
+    }, 
   },
 
   customToJSON: function () {

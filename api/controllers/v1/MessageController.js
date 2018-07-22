@@ -14,11 +14,9 @@ module.exports = {
 	create: async (req, res) => {
 		if (!req.body.title || !req.body.message) return ResponseService.json(401, res, "Title and message attributes are required.");
 		var allowedParameters = [
-			//"title", "message", "deeplink", "locations"
-			"title", "message", "deeplink"
+			"title", "message", "deeplink", "locations"
 		]
 		var data = _.pick(req.body, allowedParameters);
-		sails.log.info("Entré");
 
 		var newMessage = await Message.create(data)
 			.intercept('E_UNIQUE', (err) => {
@@ -28,26 +26,20 @@ module.exports = {
 				return ResponseService.json(400, res, "Message could not be created: invalid data.", err)				
 			})
 			.fetch();
-			sails.log(newMessage);
-			var responseData = {
-				message: newMessage
-			}
-			return ResponseService.json(200, res, "Message created succesfully.", responseData)
-
-		/* Message.create(data)
-			.then((message) => {
-				var responseData = {
-					message
-				}
-
-				//message.locations.add(req.params('locations'));
-				return ResponseService.json(200, res, "Message created succesfully.", responseData)
-			})
-			.catch( error => {
-				if (error.invalidAttributes){
-          return ResponseService.json(400, res, "Message could not be created", error.Errors)
-        }
-			}) */
+		if (!req.body.locations) { 
+			var locationsMessages = await Message.addToCollection(newMessage.id, 'locations', req.body.locations)	// [locationId, locationId]
+																.intercept('UsageError', (err) => {
+																	return ResponseService.json(400, res, "LocationsMessages relationship could not be created.", err)
+																})
+			newMessage = await Message.find(newMessage.id).populate('locations')
+										.intercept('UsageError', (err) =>{
+											return ResponseService.json(400, res, "Message with Locations could not be populated: invalid data.", err)				
+										});
+		}
+		var responseData = {
+			message: newMessage,
+		}
+		return ResponseService.json(200, res, "Message created succesfully.", responseData)
 	},
 
 	update: (req, res) => {
@@ -70,33 +62,35 @@ module.exports = {
 		})
 	},
 
-	index: (req, res, next) => {
+	index: async (req, res, next) => {
 		var options = {
 			limit: req.param('limit') || undefined,
 			skip: req.param('skip') || undefined,
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
 		};
-		Message.find(options, (err, messages) => {
-			if (err) return next(err);
-			var responseData = {
-				messages,
-				skip: options.skip,
-				limit: options.limit,
-				total: messages.length
-			}
-			return ResponseService.json(200, res, responseData)
-		});
+		var messages = await Message.find(options).populate('locations')
+										.intercept('UsageError', (err) =>{
+											return ResponseService.json(400, res, "Message with Locations could not be populated: invalid data.", err)				
+										});
+		var responseData = {
+			messages,
+			skip: options.skip,
+			limit: options.limit,
+			total: messages.length
+		}
+		return ResponseService.json(200, res, responseData)
 	},
 
-	show: (req, res, next) => {
-		Message.findOne(req.param('id'), (err, message) => {
-			if (err) return next(err);
-			if (!message) return next();
-			var responseData = {
-				message
-			}
-			return ResponseService.json(200, res, responseData)
-		});
+	show: async (req, res, next) => {
+		var message = await Message.find(req.param('id')).populate('locations')
+										.intercept('UsageError', (err) =>{
+											return ResponseService.json(400, res, "Message with Locations could not be populated: invalid data.", err)				
+										});
+		var responseData = {
+			message
+		}
+		if (message.length <= 0) return ResponseService.json(204, res, responseData)
+		return ResponseService.json(200, res, responseData)
 	},
 
 	

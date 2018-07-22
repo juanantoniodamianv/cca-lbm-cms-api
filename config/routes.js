@@ -27,6 +27,12 @@ module.exports.routes = {
   'put /v1/message/:id': 'v1/MessageController.update',
   'delete /v1/message/:id': 'v1/MessageController.destroy',
 
+  'post /v1/location': 'v1/LocationController.create',
+  'get /v1/locations': 'v1/LocationController.index',
+  'get /v1/location/:id': 'v1/LocationController.show',
+  'put /v1/location/:id': 'v1/LocationController.update',
+  'delete /v1/location/:id': 'v1/LocationController.destroy',
+
   'post /v1/forgot': 'v1/UserController.sendPasswordRecoveryEmail', // body: email 
   'post /v1/reset': 'v1/UserController.resetPassword', //body: password, confirmPassword  params: token
 

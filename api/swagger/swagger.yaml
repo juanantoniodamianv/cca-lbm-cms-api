@@ -209,7 +209,8 @@ paths:
           description: Message could not be created, title is already create.
         400:
           description: Message could not be created, invalid data.
-
+  
+  /message/{id}:
     put:
       summary: Update message
       consumes: 
@@ -229,8 +230,75 @@ paths:
           name: updateMessage
           description: Update the message
           schema:
-            $ref: "#/definitions/MessageUpdate"      
+            $ref: "#/definitions/MessageUpdate"     
+      responses:
+        200:
+          description: Message updated succesfully.
+        404:
+          description: Message could not be updated, not has been create with this id. 
+        400: 
+          description: Message could not be updated.
 
+    delete:
+      summary: Destroy message
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The message id.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Message destroyed succesfully.
+        404:
+          description: Message could not be destroyed, not has been create with this id. 
+        400: 
+          description: Message could not be destroyed.
+
+    get:
+      summary: Get message
+      consumes: 
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The message id.
+          type: string
+          required: true
+      responses:
+        200:
+          description: A message has been retrieved
+        204:
+          description: Not has been create with this id.
+  
+  /messages:
+    get:
+      summary: Get all messages
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+      responses:
+        200:
+          description: Messages has been retrieved
+        204:
+          description: No content
 
 definitions:
   UserSignUp:           
@@ -303,6 +371,17 @@ definitions:
       confirmPassword:
         type: string
   MessageNew:
+    type: object
+    required:
+      - title
+    properties:
+      title:
+        type: string
+      message:
+        type: string
+      deeplink:
+        type: string
+  MessageUpdate:
     type: object
     required:
       - title

@@ -51,33 +51,35 @@ module.exports = {
 		})
   },
   
-  index: (req, res, next) => {
+  index: async (req, res, next) => {
 		var options = {
 			limit: req.param('limit') || undefined,
 			skip: req.param('skip') || undefined,
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
-		};
-		Location.find(options, (err, locations) => {
-			if (err) return next(err);
-			var responseData = {
-				locations,
-				skip: options.skip,
-				limit: options.limit,
-				total: messages.length
-			}
-			return ResponseService.json(200, res, responseData)
-		});
+    };
+    var locations = await Location.find(options).populate('messages')
+      .intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "Locations with Messages could not be populated: invalid data.", err)
+      });
+    var responseData = {
+      locations,
+      skip: options.skip,
+			limit: options.limit,
+			total: locations.length
+    }
+    return ResponseService.json(200, res, responseData)
   },
   
-  show: (req, res, next) => {
-		Location.findOne(req.param('id'), (err, location) => {
-			if (err) return next(err);
-			if (!location) return next();
-			var responseData = {
-				location
-			}
-			return ResponseService.json(200, res, responseData)
-		});
+  show: async (req, res, next) => {
+    var location = await Location.find(req.param('id')).populate('messages')
+                    .intercept('UsageError', (err) =>{
+                      return ResponseService.json(400, res, "Message with Locations could not be populated: invalid data.", err)				
+                    });
+    var responseData = {
+      location
+    }
+    if (location.length <= 0) return ResponseService.json(204, res, responseData)
+    return ResponseService.json(200, res, responseData)
 	},
 
 

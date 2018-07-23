@@ -26,7 +26,7 @@ module.exports = {
 				return ResponseService.json(400, res, "Message could not be created: invalid data.", err)				
 			})
 			.fetch();
-		if (!req.body.locations) { 
+		if (req.body.locations) { 
 			var locationsMessages = await Message.addToCollection(newMessage.id, 'locations', req.body.locations)	// [locationId, locationId]
 																.intercept('UsageError', (err) => {
 																	return ResponseService.json(400, res, "LocationsMessages relationship could not be created.", err)
@@ -52,14 +52,15 @@ module.exports = {
 		})
 	},
 
-	destroy: (req, res) => {
-		Message.destroy(req.param('id'), (err, message) => {
+	destroy: async (req, res) => {
+		await Message.destroy(req.param('id'), (err, message) => {
 			if (err) return ResponseService.json(400, res, "Message could not be destroyed", err.Errors)
-			var responseData = {
-				message
-			}
-			return ResponseService.json(200, res, "Message destroyed succesfully", responseData)
 		})
+/* 		await Message.removeFromCollection(req.param('id'), 'locations',)
+			.intercept('UsageError', (err) => {
+				return ResponseService.json(400, res, "LocationsMessages relationship could not be destroyed.", err)
+			}) */
+		return ResponseService.json(200, res, "Message destroyed succesfully", responseData)
 	},
 
 	index: async (req, res, next) => {

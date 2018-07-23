@@ -300,6 +300,120 @@ paths:
         204:
           description: No content
 
+  /location:
+    post:
+      summary: Create new location
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: body
+          name: newLocation
+          description: The new location
+          schema:
+            $ref: "#/definitions/LocationNew"
+      responses:
+        200: 
+          description: Location created succesfully
+        404:
+          description: Location could not be created, memberId and name has been used.
+        400:
+          description: Location could not be created, invalid data.
+
+  /location/{id}:
+    put:
+      summary: Update location
+      consumes: 
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The message id.
+          type: string
+          required: true
+        - in: body
+          name: updateLocation
+          description: Update the location
+          schema:
+            $ref: "#/definitions/LocationUpdate"
+      responses:
+        200:
+          description: Location updates succesfully.
+        404:
+          description: Location could not be updated, not has been create with this id. 
+        400: 
+          description: Location could not be updated.
+
+    delete:
+      summary: Delete location
+      consumes: 
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The location id.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Location destroyed succesfully.
+        404:
+          description: Location could not be destroyed, not has been create with this id. 
+        400: 
+          description: Location could not be destroyed.
+    get:
+      summary: Get location
+      consumes: 
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: id
+          description: The location id.
+          type: string
+          required: true
+      responses:
+        200:
+          description: A location has been retrieved
+        204:
+          description: Not has been create with this id.
+
+  /locations:
+    get:
+      summary: Get all locations
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+      responses:
+        200:
+          description: Locations has been retrieved
+        204:
+          description: No content
+
+
 definitions:
   UserSignUp:           
     type: object
@@ -392,3 +506,57 @@ definitions:
         type: string
       deeplink:
         type: string
+  LocationNew:
+    type: object
+    required:
+      - name
+      - memberId
+    properties:
+      name:
+        type: string
+      contactEmail:
+        type: string
+      locationNumber:
+        type: string
+      memberId:
+        type: string
+      address1:
+        type: string
+      address2:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      postalCode:
+        type: number
+      active:
+        type: boolean
+  LocationUpdate:
+    type: object
+    required:
+      - name
+      - memberId
+    properties:
+      name:
+        type: string
+      contactEmail:
+        type: string
+      locationNumber:
+        type: string
+      memberId:
+        type: string
+      address1:
+        type: string
+      address2:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      postalCode:
+        type: number
+      active:
+        type: boolean
+
+      

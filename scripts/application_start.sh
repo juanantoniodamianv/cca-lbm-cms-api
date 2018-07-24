@@ -11,6 +11,15 @@ sudo rsync -arv --delete \
   >> /home/ubuntu/deployment_logs/rsync.log 2>&1
 
 #
+# COPYING DOCUMENTATION FILE
+#
+
+echo "$(date '+%F %T') Copying documentation file to s3 bucket" >> /home/ubuntu/deployment_logs/s3-doc.log 2>&1
+aws s3 cp /home/ubuntu/cca-lbm-cms-api/api/swagger/swagger.yaml \
+s3://cca-lbm-api-dev.ballastlane.com \
+>> /home/ubuntu/deployment_logs/s3-doc.log 2>&1
+
+#
 # STARTING NODE SERVER
 #
 

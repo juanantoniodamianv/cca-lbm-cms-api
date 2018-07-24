@@ -22,6 +22,10 @@ module.exports.routes = {
   'get /v1/users/search': 'v1/UserController.search',
   'get /v1/me': 'v1/UserController.getMe',
 
+  /* Users Account */
+  'post /v1/forgot': 'v1/UserController.sendPasswordRecoveryEmail', // body: email 
+  'post /v1/reset': 'v1/UserController.resetPassword', //body: password, confirmPassword  params: token
+
   /* Messages */
   'post /v1/message': 'v1/MessageController.create',
   'get /v1/messages': 'v1/MessageController.index',
@@ -36,9 +40,21 @@ module.exports.routes = {
   'put /v1/location/:id': 'v1/LocationController.update',
   'delete /v1/location/:id': 'v1/LocationController.destroy',
 
-  /* Users Account */
-  'post /v1/forgot': 'v1/UserController.sendPasswordRecoveryEmail', // body: email 
-  'post /v1/reset': 'v1/UserController.resetPassword', //body: password, confirmPassword  params: token
+  /* Location Geofences */
+  'post v1/location/:location-id/geofence': 'v1/GeofenceController.create',
+  'get v1/location/:location-id/geofences': 'v1/GeofenceController.index',
+  'get v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.show',
+  'put v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.update',
+  'delete v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.destroy',
+
+  /* Location Beacons */
+  'post v1/location/:location-id/beacon': 'v1/BeaconController.create',
+  'get v1/location/:location-id/beacons': 'v1/BeaconController.index',
+  'get v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.show',
+  'put v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.update',
+  'delete v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.destroy',
+
+  /* Location Messages */
 
   /* Only test */
   'get /v1/alb_ping': 'TestController.isOk',

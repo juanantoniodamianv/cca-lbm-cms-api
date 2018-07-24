@@ -29,15 +29,16 @@ module.exports = {
       type: "number",
       required: true,
     },
-/*     messageOnTrigger: {
-
-    }, */
+    messageOnTrigger: {
+      model: "message"
+    },
     enableMessageOnTrigger: {
       type: "boolean",
       defaultsTo: true
     },
-/*     messageAfterDelay: {},
-     */
+    messageAfterDelay: {
+      model: "message"
+    },
     enableMessageAfterDelay: {
       type: "boolean",
       defaultsTo: true

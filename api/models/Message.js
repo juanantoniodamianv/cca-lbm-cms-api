@@ -27,6 +27,22 @@ module.exports = {
       collection: 'location',
       via: 'messages'
     }, 
+    beaconsMessageOnTrigger: {
+      collection: "beacon",
+      via: "messageOnTrigger"
+    },
+    beaconsMessageAfterDelay: {
+      collection: "beacon",
+      via: "messageAfterDelay"
+    },
+    geofencesMessageOnTrigger: {
+      collection: "geofence",
+      via: "messageOnTrigger"
+    },
+    geofencesMessageAfterDelay: {
+      collection: "geofence",
+      via: "messageAfterDelay"
+    }
   },
 
   customToJSON: function () {

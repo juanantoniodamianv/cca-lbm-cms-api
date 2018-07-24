@@ -56,6 +56,7 @@ module.exports = {
 		await Message.destroy(req.param('id'), (err, message) => {
 			if (err) return ResponseService.json(400, res, "Message could not be destroyed", err.Errors)
 		})
+		/* verificar metodo remover en cascada */
 /* 		await Message.removeFromCollection(req.param('id'), 'locations',)
 			.intercept('UsageError', (err) => {
 				return ResponseService.json(400, res, "LocationsMessages relationship could not be destroyed.", err)

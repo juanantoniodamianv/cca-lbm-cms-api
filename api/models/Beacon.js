@@ -45,6 +45,9 @@ module.exports = {
     },
     delayHours: {
       type: "number",
+    },
+    location: {
+      model: 'location'
     }
   },
   customToJSON: function () {

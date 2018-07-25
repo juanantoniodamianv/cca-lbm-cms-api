@@ -44,6 +44,9 @@ module.exports = {
       type: "number",
       required: true,
     },
+    location: {
+      model: 'location'
+    }
   },
   customToJSON: function () {
     return this;

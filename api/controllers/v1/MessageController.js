@@ -65,20 +65,26 @@ module.exports = {
 	},
 
 	index: async (req, res, next) => {
+		var totalCount;
+		Message.getTotalCount().then(count => { totalCount = count })
 		var options = {
 			limit: req.param('limit') || undefined,
 			skip: req.param('skip') || undefined,
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
 		};
-		var messages = await Message.find(options).populate('locations')
-										.intercept('UsageError', (err) =>{
+		var messages = await Message.find({
+										skip: options.skip,
+										limit: options.limit,
+										sort: options.sort,
+									}).populate('locations')
+										.intercept('UsageError', (err) => {
 											return ResponseService.json(400, res, "Message with Locations could not be populated: invalid data.", err)				
 										});
 		var responseData = {
 			messages,
 			skip: options.skip,
 			limit: options.limit,
-			total: messages.length
+			total: totalCount || 0
 		}
 		return ResponseService.json(200, res, responseData)
 	},
@@ -94,8 +100,6 @@ module.exports = {
 		if (message.length <= 0) return ResponseService.json(204, res, responseData)
 		return ResponseService.json(200, res, responseData)
 	},
-
-	
 
 };
 

@@ -82,7 +82,5 @@ module.exports = {
     return ResponseService.json(200, res, responseData)
 	},
 
-
-
 };
 

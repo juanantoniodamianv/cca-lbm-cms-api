@@ -41,18 +41,18 @@ module.exports.routes = {
   'delete /v1/location/:id': 'v1/LocationController.destroy',
 
   /* Location Geofences */
-  'post v1/location/:location-id/geofence': 'v1/GeofenceController.create',
-  'get v1/location/:location-id/geofences': 'v1/GeofenceController.index',
-  'get v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.show',
-  'put v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.update',
-  'delete v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.destroy',
+  'post /v1/location/geofence': 'v1/GeofenceController.create',
+  'get /v1/location/:location-id/geofences': 'v1/GeofenceController.index',
+  'get /v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.show',
+  'put /v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.update',
+  'delete /v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.destroy',
 
   /* Location Beacons */
-  'post v1/location/:location-id/beacon': 'v1/BeaconController.create',
-  'get v1/location/:location-id/beacons': 'v1/BeaconController.index',
-  'get v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.show',
-  'put v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.update',
-  'delete v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.destroy',
+  'post /v1/location/beacon': 'v1/BeaconController.create',
+  'get /v1/location/:location-id/beacons': 'v1/BeaconController.index',
+  'get /v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.show',
+  'put /v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.update',
+  'delete /v1/location/:location-id/beacon/:beacon-id': 'v1/BeaconController.destroy',
 
   /* Location Messages */
 

@@ -47,7 +47,13 @@ module.exports = {
 
   customToJSON: function () {
     return this;
-  }
+  }, 
+
+  getTotalCount: async () => {
+    var totalCount = await Message.count();
+    if (totalCount) { totalCount = +totalCount; }
+		return totalCount;
+	}
 
 };
 

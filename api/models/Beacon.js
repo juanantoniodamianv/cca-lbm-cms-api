@@ -50,8 +50,15 @@ module.exports = {
       model: 'location'
     }
   },
+
   customToJSON: function () {
     return this;
-  }
+  },
+  
+  getTotalCount: async () => {
+    var totalCount = await Beacon.count();
+    if (totalCount) { totalCount = +totalCount; }
+		return totalCount;
+	},
 };
 

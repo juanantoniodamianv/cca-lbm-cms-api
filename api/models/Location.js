@@ -67,7 +67,6 @@ module.exports = {
 
   getLocation: async (id) => {
     var location = await Location.find(id);
-    sails.log.info(`Location parameter: ${location} `);
     return location;
   },
 

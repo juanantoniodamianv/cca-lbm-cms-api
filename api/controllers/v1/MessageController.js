@@ -86,6 +86,7 @@ module.exports = {
 			limit: options.limit,
 			total: totalCount || 0
 		}
+		if (responseData.total === 0) return ResponseService.json(204, res, responseData)
 		return ResponseService.json(200, res, responseData)
 	},
 

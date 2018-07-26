@@ -19,7 +19,6 @@ module.exports = {
     if (req.body.messageOnTrigger && (Location.isRelationship(req.body.messageOnTrigger, req.body.location)) === undefined) return ResponseService.json(400, res, "Relationship with messageOnTrigger does not exist.")
     if (req.body.messageAfterDelay && (Location.isRelationship(req.body.messageAfterDelay, req.body.location)) === undefined) return ResponseService.json(400, res, "Relationship with messageAfterDelay does not exist.")
 
-
     var allowedParameters = [
       "name", "radius", "longitude", "latitude", "messageOnTrigger", "enableMessageOnTrigger", "messageAfterDelay", "enableMessageAfterDelay", "delayHours", "location"
     ]
@@ -67,21 +66,33 @@ module.exports = {
   },
   
   index: async (req, res) => {
+    /* var totalCount;
+		Geofence.getTotalCount().then(count => { totalCount = count }) */
     var options = {
 			limit: req.param('limit') || undefined,
 			skip: req.param('skip') || undefined,
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
     };
-    var geofences = await Geofence.find(options).populate('locations')
-      .intercept('UsageError', (err) => {
-        return ResponseService.json(400, res, "Geofence with Locations could not be populated: invalid data.", err)
-      });
+    if (req.param('locationid') !== undefined) {
+      var geofences = await Location.find({
+        where: { id: req.param('locationid') },
+        skip: options.skip,
+        limit: options.limit,
+        sort: options.sort
+      }).populate('geofences')
+    } else {
+      var geofences = await Geofence.find(options).populate('location')
+        .intercept('UsageError', (err) => {
+          return ResponseService.json(400, res, "Geofence with Locations could not be populated: invalid data.", err)
+        });
+    }
     var responseData = {
-      geofences,
+      location: geofences,
       skip: options.skip,
 			limit: options.limit,
-			total: geofences.length
+			//total: totalCount || 0
     }
+    if (responseData.total === 0) return ResponseService.json(204, res, responseData)
     return ResponseService.json(200, res, responseData)
   },
   

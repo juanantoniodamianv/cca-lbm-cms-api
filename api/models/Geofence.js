@@ -48,9 +48,15 @@ module.exports = {
       model: 'location'
     }
   },
+
   customToJSON: function () {
     return this;
-  }
+  },
 
+  getTotalCount: async () => {
+    var totalCount = await Geofence.count();
+    if (totalCount) { totalCount = +totalCount; }
+		return totalCount;
+	},
 };
 

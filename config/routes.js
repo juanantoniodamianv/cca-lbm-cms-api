@@ -42,7 +42,8 @@ module.exports.routes = {
 
   /* Location Geofences */
   'post /v1/location/geofence': 'v1/GeofenceController.create',
-  'get /v1/location/:location-id/geofences': 'v1/GeofenceController.index',
+  'get /v1/location/:locationid/geofences': 'v1/GeofenceController.index',
+  'get /v1/locations/geofences': 'v1/GeofenceController.index', // <-- Retrieve all geofences with their locations.
   'get /v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.show',
   'put /v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.update',
   'delete /v1/location/:location-id/geofence/:geofence-id': 'v1/GeofenceController.destroy',

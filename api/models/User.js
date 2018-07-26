@@ -88,6 +88,12 @@ module.exports = {
     });
   },
 
+  getTotalCount: async () => {
+    var totalCount = await User.count();
+    if (totalCount) { totalCount = +totalCount; }
+		return totalCount;
+	},
+
 /*   findUser: async (email) => {
     var userRecord = await User.findOne({email});
     //sails.log.info(userRecord);

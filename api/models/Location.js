@@ -50,12 +50,36 @@ module.exports = {
     messages: {
       collection: 'message',
       via: 'locations'
+    },
+    geofences: {
+      collection: 'geofence',
+      via: 'location'
+    },
+    beacons: {
+      collection: 'beacon',
+      via: 'location'
     }
   },
 
   customToJSON: function () {
     return this;
-  }
+  },
 
+  getLocation: async (id) => {
+    var location = await Location.find(id);
+    return location;
+  },
+
+  isRelationship: async (message, location) => {
+    var messageLocation = await Location.find({id: location})
+                            .populate('messages', {
+                              where: {
+                                id: message
+                              },
+                              limit: 1
+                            });
+    sails.log.info(`MessageLocation: ${messageLocation}`);
+    return messageLocation;
+  },
 };
 

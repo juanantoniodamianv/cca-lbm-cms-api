@@ -29,25 +29,36 @@ module.exports = {
       type: "number",
       required: true,
     },
-/*     messageOnTrigger: {
-
-    }, */
+    messageOnTrigger: {
+      model: "message"
+    },
     enableMessageOnTrigger: {
       type: "boolean",
       defaultsTo: true
     },
-/*     messageAfterDelay: {},
-     */
+    messageAfterDelay: {
+      model: "message"
+    },
     enableMessageAfterDelay: {
       type: "boolean",
       defaultsTo: true
     },
     delayHours: {
       type: "number",
+    },
+    location: {
+      model: 'location'
     }
   },
+
   customToJSON: function () {
     return this;
-  }
+  },
+  
+  getTotalCount: async () => {
+    var totalCount = await Beacon.count();
+    if (totalCount) { totalCount = +totalCount; }
+		return totalCount;
+	},
 };
 

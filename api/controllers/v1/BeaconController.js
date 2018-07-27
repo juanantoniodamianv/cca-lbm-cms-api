@@ -12,16 +12,17 @@ module.exports = {
   },
   
   create: async (req, res) => {
-    if (!req.body.name || !req.body.majorId || req.body.minorId || req.body.triggerProximity || !req.body.location) return ResponseService.json(401, res, "Name, MajorId, MinorId and TriggerProximity attributes are required.");
+    if (!req.body.name || !req.body.majorId || !req.body.minorId || !req.body.triggerProximity || !req.param('locationid')) return ResponseService.json(401, res, "Name, MajorId, MinorId, TriggerProximity attributes and Location Path are required.");
 
     /* Verify if the Beacon parameter exists */
-    if (Location.getLocation(req.body.location) === undefined) return ResponseService.json(400, res, "The specified location does not exist.", err)
-    if (req.body.messageOnTrigger && (Location.isRelationship(req.body.messageOnTrigger, req.body.location)) === undefined) return ResponseService.json(400, res, "Relationship with messageOnTrigger does not exist.")
-    if (req.body.messageAfterDelay && (Location.isRelationship(req.body.messageAfterDelay, req.body.location)) === undefined) return ResponseService.json(400, res, "Relationship with messageAfterDelay does not exist.")
+    if (Location.getLocation(req.param('locationid')) === undefined) return ResponseService.json(400, res, "The specified location does not exist.", err)
+    if (req.body.messageOnTrigger && (Location.isRelationship(req.body.messageOnTrigger, req.param('locationid'))) === undefined) return ResponseService.json(400, res, "Relationship with messageOnTrigger does not exist.")
+    if (req.body.messageAfterDelay && (Location.isRelationship(req.body.messageAfterDelay, req.param('locationid'))) === undefined) return ResponseService.json(400, res, "Relationship with messageAfterDelay does not exist.")
 
     var allowedParameters = [
       "name", "beaconType", "majorId", "minorId", "triggerProximity", "messageOnTrigger", "enableMessageOnTrigger", "messageAfterDelay", "enableMessageAfterDelay", "delayHours", "location"
     ]
+    req.body.location = req.param('locationid'); // mmm bad code
     var data = _.pick(req.body, allowedParameters);
     var newBeacon = await Beacon.create(data)
       .intercept('E_UNIQUE', (err) => {
@@ -38,15 +39,15 @@ module.exports = {
   },
 
   update: (req, res) => {
-    if (req.body.messageOnTrigger && (Location.isRelationship(req.body.messageOnTrigger, req.param('location-id'))) === undefined) return ResponseService.json(400, res, "Relationship with messageOnTrigger does not exist.")
-    if (req.body.messageAfterDelay && (Location.isRelationship(req.body.messageAfterDelay, req.param('location-id'))) === undefined) return ResponseService.json(400, res, "Relationship with messageAfterDelay does not exist.")
+    if (req.body.messageOnTrigger && (Location.isRelationship(req.body.messageOnTrigger, req.param('locationid'))) === undefined) return ResponseService.json(400, res, "Relationship with messageOnTrigger does not exist.")
+    if (req.body.messageAfterDelay && (Location.isRelationship(req.body.messageAfterDelay, req.param('locationid'))) === undefined) return ResponseService.json(400, res, "Relationship with messageAfterDelay does not exist.")
     
     var allowedParameters = [
       "name", "beaconType", "majorId", "minorId", "triggerProximity", "messageOnTrigger", "enableMessageOnTrigger", "messageAfterDelay", "enableMessageAfterDelay", "delayHours"
     ]
     var data = _.pick(req.body, allowedParameters);
 
-    Beacon.update(req.param('beacon-id'), data, (err, beacon) => {
+    Beacon.update(req.param('beaconid'), data, (err, beacon) => {
       if (err) return ResponseService.json(400, res, "Beacon could not be updated", err.Errors)
       var responseData = {
         beacon
@@ -56,7 +57,7 @@ module.exports = {
   },
 
   destroy: (req, res) => {
-    Beacon.destroy(req.param('beacon-id'), (err, beacon) => {
+    Beacon.destroy(req.param('beaconid'), (err, beacon) => {
       if (err) return ResponseService.json(400, res, "Beacon could not be destroyed", err.Errors)
       var responseData = {
         beacon
@@ -66,29 +67,47 @@ module.exports = {
   },
 
   index: async (req, res) => {
-    var totalCount;
-		Beacon.getTotalCount().then(count => { totalCount = count })
+    /* var totalCount;
+		Beacon.getTotalCount().then(count => { totalCount = count }) */
     var options = {
 			limit: req.param('limit') || undefined,
 			skip: req.param('skip') || undefined,
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
     };
-    var beacons = await Beacon.find(options).populate('locations')
-                  .intercept('UsageError', (err) => {
-                    return ResponseService.json(400, res, "Beacon with Locations could not be populated: invalid data.", err)
-                  });
-    var responseData = {
-      beacons,
-      skip: options.skip,
-			limit: options.limit,
-			total: totalCount || 0
+    if (req.param('locationid') !== undefined) {
+      var locations = await Location.find({
+        where: { id: req.param('locationid') },
+        skip: options.skip,
+        limit: options.limit,
+        sort: options.sort
+      }).populate('beacons')
+        .intercept('UsageError', (err) => {
+          return ResponseService.json(400, res, "Beacon with Locations could not be populated: invalid data.", err)
+        });
+      var responseData = {
+        locations,
+        skip: options.skip,
+        limit: options.limit,
+        //total: totalCount || 0
+      }
+    } else {
+      var beacons = await Beacon.find(options).populate('location')
+        .intercept('UsageError', (err) => {
+          return ResponseService.json(400, res, "Beacon with Locations could not be populated: invalid data.", err)
+        });
+      var responseData = {
+        beacons,
+        skip: options.skip,
+        limit: options.limit,
+        //total: totalCount || 0
+      }
     }
     if (responseData.total === 0) return ResponseService.json(204, res, responseData)
     return ResponseService.json(200, res, responseData)
   },
 
   show: async (req, res) => {
-    var beacon = await Beacon.find(req.param('beacon-id')).populate('locations')
+    var beacon = await Beacon.find(req.param('beaconid')).populate('location')
                   .intercept('UsageError', (err) => {
                     return ResponseService.json(400, res, "Beacon with Locations could not be populated: invalid data", err)
                   });

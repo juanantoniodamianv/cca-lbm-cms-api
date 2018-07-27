@@ -80,7 +80,22 @@ module.exports = {
     }
     if (location.length <= 0) return ResponseService.json(204, res, responseData)
     return ResponseService.json(200, res, responseData)
-	},
+  },
+  
+  getAllLocationMessages: async (req, res) => {
+    if (!req.param('locationid')) return ResponseService.json(401, res, "LocationId path param are required.");
+    var location = await Location.find({
+      where: { id: req.param('locationid') }
+    }).populate('messages')
+    .intercept('UsageError', (err) => {
+      return ResponseService.json(400, res, "Messages with Locations could not be populated: invalid data.", err)
+    });
+    var responseData = {
+      location,
+    }
+    if (location.length <= 0) return ResponseService.json(204, res, responseData)
+    return ResponseService.json(200, res, responseData)
+  },
 
 };
 

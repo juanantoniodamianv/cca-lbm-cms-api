@@ -254,6 +254,11 @@ paths:
           description: The message id.
           type: string
           required: true
+        - in: body
+          name: destroyMessage
+          description: Destroy the message
+          schema:
+            $ref: "#/definitions/MessageDestroy"
       responses:
         200:
           description: Message destroyed succesfully.
@@ -558,5 +563,12 @@ definitions:
         type: number
       active:
         type: boolean
+  MessageDestroy:
+    type: object
+    required:
+      - locations
+    properties:
+      locations:
+        type: string
 
       

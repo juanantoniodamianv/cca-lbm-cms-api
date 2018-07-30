@@ -418,6 +418,328 @@ paths:
         204:
           description: No content
 
+  /location/{locationid}/messages:
+    get:
+      summary: Get all messages associated to a specific location
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+      responses:
+        200:
+          description: Messages has been retrieved
+        204:
+          description: No content
+  
+  /location/{locationid}/geofence:
+    post:
+      summary: Create a new geofence for a specific location
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+        - in: body
+          name: newGeofence
+          description: The new geofence
+          schema:
+            $ref: "#/definitions/GeofenceNew"
+      responses:
+        200: 
+          description: Geofence created succesfully.
+        400:
+          description: Geofence could not be created, invalid data.
+        401:
+          description: Geofence could not be created, name is already create.
+
+  /location/{locationid}/geofence/{geofenceid}:
+    get:
+      summary: Get geofence information for a specific geofence id
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+        - in: path
+          name: geofenceid
+          description: The geofence id.
+          type: string
+          required: true
+      responses:
+        200: 
+          description: Geofence has been retrieved.
+        204:
+          description: No content.
+
+    put:
+      summary: Update geofence information for a specific geofence id
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+        - in: path
+          name: geofenceid
+          description: The geofence id.
+          type: string
+          required: true
+        - in: body
+          name: updateGeofence
+          description: Update geofence
+          schema:
+            $ref: "#/definitions/GeofenceNew"
+      responses:
+        200: 
+          description: Geofence updated succesfully.
+        400:
+          description: Geofence could not be updated.
+
+    delete:
+      summary: Delete geofence
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+        - in: path
+          name: geofenceid
+          description: The geofence id.
+          type: string
+          required: true
+      responses:
+        200: 
+          description: Geofence destroyed succesfully.
+        400:
+          description: Geofence could not be destroyed.
+
+  /locations/geofences:
+    get:
+      summary: Retrieve all geofences with their locations.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+      responses:
+        200: 
+          description: All geofences has been retrieved with their locations.
+        204:
+          description: No content.
+
+  /locations/{locationid}/geofences:
+    get:
+      summary: Get all geofences for a specific location
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+      responses:
+        200: 
+          description: All geofences has been retrieved with specific location.
+        204:
+          description: No content.
+
+
+  /location/{locationid}/beacon:
+    post:
+      summary: Create a new beacon for a specific location
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+        - in: body
+          name: newBeacon
+          description: The new beacon
+          schema:
+            $ref: "#/definitions/BeaconNew"
+      responses:
+        200: 
+          description: Beacon created succesfully.
+        400:
+          description: Beacon could not be created, invalid data.
+        401:
+          description: Beacon could not be created, name is already create.
+
+  /location/{locationid}/beacon/{beaconid}:
+    get:
+      summary: Get beacon information for a specific beacon id
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+        - in: path
+          name: beaconid 
+          description: The beacon id.
+          type: string
+          required: true
+      responses:
+        200: 
+          description: Beacon has been retrieved.
+        204:
+          description: No content.
+
+    put:
+      summary: Update beacon information for a specific beacon id
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+        - in: path
+          name: beaconid
+          description: The beacon id.
+          type: string
+          required: true
+        - in: body
+          name: updateBeacon
+          description: Update beacon
+          schema:
+            $ref: "#/definitions/BeaconNew"
+      responses:
+        200: 
+          description: Beacon updated succesfully.
+        400:
+          description: Beacon could not be updated.
+
+    delete:
+      summary: Delete beacon
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+        - in: path
+          name: beaconid
+          description: The beacon id.
+          type: string
+          required: true
+      responses:
+        200: 
+          description: Beacon destroyed succesfully.
+        400:
+          description: Beacon could not be destroyed.
+
+  /locations/beacons:
+    get:
+      summary: Retrieve all beacons with their locations.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+      responses:
+        200: 
+          description: All beacons has been retrieved with their locations.
+        204:
+          description: No content.
+
+  /locations/{locationid}/beacons:
+    get:
+      summary: Get all beacons for a specific location
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+      responses:
+        200: 
+          description: All beacons has been retrieved with specific location.
+        204:
+          description: No content.
+  
 
 definitions:
   UserSignUp:           
@@ -569,6 +891,65 @@ definitions:
       - locations
     properties:
       locations:
+        type: string
+  GeofenceNew:
+    type: object
+    required:
+      - name
+      - radius
+      - longitude
+      - latitude
+      - delayHours
+    properties:
+      name:
+        type: string
+      radius:
+        type: string
+      longitude:
+        type: string
+      latitude:
+        type: string
+      messageOnTrigger:
+        type: string
+      enableMessageOnTrigger:
+        type: boolean
+      messageAfterDelay:
+        type: string
+      enableMessageAfterDelay:
+        type: boolean
+      delayHours:
+        type: number
+      location:
+        type: string
+  BeaconNew:
+    type: object
+    required:
+      - name
+      - majorId
+      - minorId
+      - triggerProximity
+    properties:
+      name:
+        type: string
+      beaconType:
+        type: string
+      majorId:
+        type: string
+      minorId:
+        type: string
+      triggerProximity:
+        type: string
+      messageOnTrigger:
+        type: string
+      enableMessageOnTrigger:
+        type: boolean
+      messageAfterDelay:
+        type: string
+      enableMessageAfterDelay:
+        type: boolean
+      delayHours:
+        type: number
+      location:
         type: string
 
       

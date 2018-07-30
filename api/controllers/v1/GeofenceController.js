@@ -26,7 +26,7 @@ module.exports = {
     var data = _.pick(req.body, allowedParameters);
     var newGeofence = await Geofence.create(data)
       .intercept('E_UNIQUE', (err) => {
-        return ResponseService.json(400, res, "Geofence could not be created: name is already create.", err)
+        return ResponseService.json(401, res, "Geofence could not be created: name is already create.", err)
       })
       .intercept('UsageError', (err) => {
         return ResponseService.json(400, res, "Geofence could not be created: invalid data.", err)

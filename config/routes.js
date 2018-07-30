@@ -49,7 +49,7 @@ module.exports.routes = {
   
   'get /v1/location/:locationid/geofence/:geofenceid': 'v1/GeofenceController.show',          // <-- Get geofence information for a specific geofence
   'put /v1/location/:locationid/geofence/:geofenceid': 'v1/GeofenceController.update',        // <-- Update geofence information for a specific geofence
-  'delete /v1/location/:locationid/geofence/:geofenceid': 'v1/GeofenceController.destroy',    // <-- Delete beacon 
+  'delete /v1/location/:locationid/geofence/:geofenceid': 'v1/GeofenceController.destroy',    // <-- Delete geofence 
 
   'get /v1/locations/geofences': 'v1/GeofenceController.index',                               // <-- Retrieve all geofences with their locations.
   'get /v1/locations/:locationid/geofences': 'v1/GeofenceController.index',                    // <-- Get all geofences for a specific location

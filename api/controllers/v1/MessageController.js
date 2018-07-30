@@ -26,7 +26,7 @@ module.exports = {
 				return ResponseService.json(400, res, "Message could not be created: invalid data.", err)				
 			})
 			.fetch();
-		if (req.body.locations) { 
+/* 		if (req.body.locations) { 
 			var locationsMessages = await Message.addToCollection(newMessage.id, 'locations', req.body.locations)	// [locationId, locationId]
 																.intercept('UsageError', (err) => {
 																	return ResponseService.json(400, res, "LocationsMessages relationship could not be created.", err)
@@ -35,32 +35,44 @@ module.exports = {
 										.intercept('UsageError', (err) =>{
 											return ResponseService.json(400, res, "Message with Locations could not be populated: invalid data.", err)				
 										});
-		}
+		} */
 		var responseData = {
 			message: newMessage,
 		}
 		return ResponseService.json(200, res, "Message created succesfully.", responseData)
 	},
 
-	update: (req, res) => {
-		Message.update(req.param('id'), req.allParams(), (err, message) => {
-			if (err) return ResponseService.json(400, res, "Message could not be updated", error.Errors)
-			var responseData = {
-				message
-			}
-			return ResponseService.json(200, res, "Message updated succesfully", responseData)
-		})
+	update: async (req, res) => {
+		await Message.update(req.param('id'), req.allParams())
+			.intercept('UsageError', (err) =>{
+				return ResponseService.json(400, res, "Message could not be created: invalid data.", err)				
+			})
+		await Message.replaceCollection(req.param('id'), 'locations', req.body.locations)
+			.intercept('UsageError', (err) => {
+				return ResponseService.json(400, res, "LocationsMessages relationship could not be created.", err)
+			})
+		updatedMessage = await Message.find(req.param('id')).populate('locations')
+									.intercept('UsageError', (err) =>{
+										return ResponseService.json(400, res, "Message with Locations could not be populated: invalid data.", err)				
+									});
+		var responseData = {
+			message: updatedMessage
+		}
+		return ResponseService.json(200, res, "Message updated succesfully", responseData)
 	},
 
 	destroy: async (req, res) => {
-		await Message.destroy(req.param('id'), (err, message) => {
+		await Message.destroy(req.param('id'), (err) => {
 			if (err) return ResponseService.json(400, res, "Message could not be destroyed", err.Errors)
 		})
 		/* verificar metodo remover en cascada */
-/* 		await Message.removeFromCollection(req.param('id'), 'locations',)
+		destroyedMessage = await Message.removeFromCollection(req.param('id'), 'locations', req.param('locations'))
 			.intercept('UsageError', (err) => {
 				return ResponseService.json(400, res, "LocationsMessages relationship could not be destroyed.", err)
-			}) */
+			})
+		var responseData = {
+			message: destroyedMessage
+		}
 		return ResponseService.json(200, res, "Message destroyed succesfully", responseData)
 	},
 

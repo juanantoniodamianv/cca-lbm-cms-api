@@ -115,6 +115,23 @@ module.exports = {
     return ResponseService.json(200, res, responseData)
   },
 
+  getAllGeofenceMessages: async (req, res) => {
+    var messages = await Geofence.find({
+      where: { 
+        id: req.param('geofenceid'),
+        location: req.param('locationid')
+      }
+    }).populate('messages')
+    .intercept('UsageError', (err) => {
+      return ResponseService.json(400, res, "Messages asociated to a specific geofence not work.", err)
+    });
+    var responseData = {
+      messages
+    }
+    if (messages.length <= 0) return ResponseService.json(204, res, responseData)
+    return ResponseService.json(200, res, responseData) 
+  },
+
 };
 
 

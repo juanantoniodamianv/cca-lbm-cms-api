@@ -49,7 +49,7 @@ module.exports = {
     },
     messages: {
       collection: 'message',
-      via: 'locations'
+      via: 'locations',
     },
     geofences: {
       collection: 'geofence',
@@ -63,7 +63,7 @@ module.exports = {
 
   customToJSON: function () {
     return this;
-  },
+  },  
 
   getLocation: async (id) => {
     var location = await Location.find(id);

@@ -41,8 +41,8 @@ module.exports.routes = {
   'delete /v1/location/:id': 'v1/LocationController.destroy',
 
   /* Location Messages */
-  'get /v1/locations/:locationid/messages': 'v1/LocationController.getAllLocationMessages',           // <-- Get all messages associated to a specific location
-  'get /v1/locations/:locationid/notifications': 'v1/LocationController.getAllLocationNotifications', // <-- Get all notifications sent for a specific locations
+  'get /v1/location/:locationid/messages': 'v1/LocationController.getAllLocationMessages',           // <-- Get all messages associated to a specific location
+  'get /v1/location/:locationid/notifications': 'v1/LocationController.getAllLocationNotifications', // <-- Get all notifications sent for a specific locations
 
   /* #### Location Geofences ####*/
   'post /v1/location/:locationid/geofence': 'v1/GeofenceController.create',                   // <-- Create a new geofence for a specific location
@@ -81,4 +81,24 @@ module.exports.routes = {
 
   /* Only test */
   'get /v1/alb_ping': 'TestController.isOk',
+
+
+
+
+/*   'post /v1/location': 'create',
+  'get /v1/location': 'index',
+  'get /v1/location/:locationid': 'show',
+  'put /v1/location/:locationid': 'update',
+  'delete /v1/location/:locationid': 'delete',
+  'get /v1/location/:locationid/messages': 'showAllLocationMessages',
+
+  'post /v1/message': 'create',
+  'get /v1/messages': 'index',
+  'get /v1/message/:messageid': 'show',
+  'put /v1/message/:messageid': 'update',
+  'delete /v1/message/:messageid': 'delete', */
+
+
+
+
 };

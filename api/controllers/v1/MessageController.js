@@ -59,26 +59,20 @@ module.exports = {
 			message: updatedMessage
 		}
 		return ResponseService.json(200, res, "Message updated succesfully", responseData)
-
-/* 
-		await Message.update(req.param('id'), req.allParams(), (err, message) => {
-			if (err) return ResponseService.json(400, res, "Message could not be updated", error.Errors)
-			var responseData = {
-				message
-			}
-			return ResponseService.json(200, res, "Message updated succesfully", responseData)
-		}) */
 	},
 
 	destroy: async (req, res) => {
-		await Message.destroy(req.param('id'), (err, message) => {
+		await Message.destroy(req.param('id'), (err) => {
 			if (err) return ResponseService.json(400, res, "Message could not be destroyed", err.Errors)
 		})
 		/* verificar metodo remover en cascada */
-/* 		await Message.removeFromCollection(req.param('id'), 'locations',)
+		destroyedMessage = await Message.removeFromCollection(req.param('id'), 'locations', req.param('locations'))
 			.intercept('UsageError', (err) => {
 				return ResponseService.json(400, res, "LocationsMessages relationship could not be destroyed.", err)
-			}) */
+			})
+		var responseData = {
+			message: destroyedMessage
+		}
 		return ResponseService.json(200, res, "Message destroyed succesfully", responseData)
 	},
 

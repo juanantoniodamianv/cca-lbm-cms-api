@@ -429,6 +429,11 @@ paths:
           description: Authorization token
           type: string
           required: true
+        - in: path
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
       responses:
         200:
           description: Messages has been retrieved

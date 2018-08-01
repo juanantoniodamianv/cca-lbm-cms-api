@@ -44,15 +44,14 @@ module.exports = {
     return ResponseService.json(200, res, "User created successfully", responseData)
   },
 
-  index: async (req, res, next) => {
+/*   index: async (req, res, next) => {
     var totalCount;
-		User.getTotalCount().then(count => { totalCount = count })
     var options = {
       limit: req.param('limit') || undefined,
       skip: req.param('skip') || undefined,
       sort: req.param('sort') || "createdAt desc" // columnName desc||asc
-      // where: req.param('where') || undefined
     };
+		await User.getTotalCount().then(count => { totalCount = count })
     var users = await User.find({
                   skip: options.skip,
                   limit: options.limit,
@@ -68,7 +67,38 @@ module.exports = {
     }
     if (responseData.total === 0) return ResponseService.json(204, res, responseData)
     return ResponseService.json(200, res, responseData)
-  },
+  }, */
+
+  index: async (req, res, next) => {
+    var totalCount;
+    var responseData = {};
+    var options = {
+      limit: req.param('limit') || undefined,
+      skip: req.param('skip') || undefined,
+      sort: req.param('sort') || "createdAt desc" // columnName desc||asc
+    };
+		await User.getTotalCount().then(count => { 
+      totalCount = count;
+      responseData = {
+        total: totalCount || 0
+      };
+    })
+    
+    await User.find({
+               skip: options.skip,
+               limit: options.limit,
+               sort: options.sort,
+          }).intercept('UsageError', (err) => {
+             return ResponseService.json(400, res, "Users could not be found: invalid data.", err)
+          }).then(users => {
+      			responseData = {
+              users,
+              skip: options.skip,
+      				limit: options.limit
+            }
+    			})
+    return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
+ },
 
   search: (req, res, next) => {
     var searchObj = {};

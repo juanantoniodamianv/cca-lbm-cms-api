@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "bcrypt": "^3.0.0",
+    "firebase-admin": "^5.13.1",
     "include-all": "~0.1.6",
     "jsonwebtoken": "^8.2.1",
     "mandrill-api": "^1.0.45",

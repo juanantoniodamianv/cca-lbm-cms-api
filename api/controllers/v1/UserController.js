@@ -79,9 +79,6 @@ module.exports = {
     };
 		await User.getTotalCount().then(count => { 
       totalCount = count;
-      responseData = {
-        total: totalCount || 0
-      };
     })
     
     await User.find({
@@ -94,7 +91,8 @@ module.exports = {
       			responseData = {
               users,
               skip: options.skip,
-      				limit: options.limit
+              limit: options.limit,
+              total: totalCount || 0
             }
     			})
     return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);

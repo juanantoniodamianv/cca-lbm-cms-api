@@ -78,7 +78,7 @@ module.exports.routes = {
   'delete /v1/devices': '',*/
   
   // Params: beaconId/geofenceId, deviceId
-  //'post /v1/notifications': '', //  <-- Called when device has entered a specified Geofence or found a beacon. 
+  'post /v1/notifications': 'v1/PushNotificationController.triggerPushNotification', //  <-- Called when device has entered a specified Geofence or found a beacon. 
   //'get /v1/notifications': '',  //  <-- Get a list of all notifications sent
 
   /* Only test */

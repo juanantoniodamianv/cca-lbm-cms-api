@@ -1,10 +1,11 @@
-/* var admin = require('firebase-admin');
+const admin = require('firebase-admin')
 
-var serviceAccount = require('./fcm/cca-lbm-api-dev-firebase-adminsdk-c6oj8-1928069b42.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://cca-lbm-api-dev.firebaseio.com'
+const app = admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: process.env.FCM_PROJECT_ID,
+    clientEmail: process.env.FCM_CLIENT_EMAIL,
+    privateKey: process.env.FCM_PRIVATE_KEY
+  })
 })
 
 module.exports = {
@@ -49,7 +50,8 @@ module.exports = {
     }
   },
   
-  fn: async (inputs, exits) => {
+  // enviar push notification on trigger.. ver-> on delay
+  sendPushNotification: async (inputs, exits) => {
     try {
       const { device, title, body, payload, opts } = inputs
       const message = Object.assign({ notification: { title, body }, token: device, data: payload }, opts)
@@ -59,4 +61,4 @@ module.exports = {
       return exits.error(err)
     }
   }
-} */
+}

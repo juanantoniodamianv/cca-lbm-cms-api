@@ -121,3 +121,5 @@ nbproject
 # Firebase Cloud Messages
 ################################################
 fcm/*
+
+.env

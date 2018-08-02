@@ -22,5 +22,21 @@ module.exports = {
     }
   },
 
+  createMessageHistory: async (deviceId, trigger, triggerType) => {
+    var data = {
+      historyType: triggerType,
+      name: trigger.name,
+      userId: deviceId,
+      message: trigger.messageOnTrigger.message
+    }
+    sails.log.info(data);
+    await MessageHistory.create(data)
+      .intercept('UsageError', (err) => {
+        return sails.log.error(`Error ocurred: ${err}`)
+      })
+    sails.log.info(`Message History has been saved successfully.`)
+    return 0; 
+  }
+
 };
 

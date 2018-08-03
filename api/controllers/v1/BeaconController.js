@@ -75,17 +75,20 @@ module.exports = {
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
     };
     if (req.param('locationid') !== undefined) {
-      var locations = await Location.find({
-        where: { id: req.param('locationid') },
-        skip: options.skip,
-        limit: options.limit,
-        sort: options.sort
-      }).populate('beacons')
-        .intercept('UsageError', (err) => {
-          return ResponseService.json(400, res, "Beacon with Locations could not be populated: invalid data.", err)
-        });
+      var beacons = await Beacon.find({
+                              where: { location: req.param('locationid') },
+                              skip: options.skip,
+                              limit: options.limit,
+                              sort: options.sort
+                            })
+                            .populate('messageOnTrigger')
+                            .populate('messageAfterDelay')
+                            .populate('location')
+                            .intercept('UsageError', (err) => {
+                              return ResponseService.json(400, res, "Beacons could not be populated: invalid data.", err)
+                            });
       var responseData = {
-        locations,
+        beacons,
         skip: options.skip,
         limit: options.limit,
         //total: totalCount || 0

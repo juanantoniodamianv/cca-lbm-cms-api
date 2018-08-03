@@ -57,6 +57,11 @@ module.exports = {
     var totalCount = await Geofence.count();
     if (totalCount) { totalCount = +totalCount; }
 		return totalCount;
-	},
+  },
+
+  getById: async (id) => {
+    var geofence = await Geofence.find(id).populate('messages');
+    return geofence;
+  },
 };
 

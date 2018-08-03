@@ -59,6 +59,11 @@ module.exports = {
     var totalCount = await Beacon.count();
     if (totalCount) { totalCount = +totalCount; }
 		return totalCount;
-	},
+  },
+  
+  getById: async (id) => {
+    var beacon = await Beacon.findOne(id).populate('messageOnTrigger');
+    return beacon;
+  },
 };
 

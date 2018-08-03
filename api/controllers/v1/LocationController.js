@@ -57,7 +57,10 @@ module.exports = {
 			skip: req.param('skip') || undefined,
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
     };
-    var locations = await Location.find(options).populate('messages')
+    var locations = await Location.find(options)
+                            .populate('messages')
+                            .populate('beacons')
+                            .populate('geofences')
       .intercept('UsageError', (err) => {
         return ResponseService.json(400, res, "Locations with Messages could not be populated: invalid data.", err)
       });

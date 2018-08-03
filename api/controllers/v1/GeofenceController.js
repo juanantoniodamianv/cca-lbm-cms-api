@@ -75,14 +75,20 @@ module.exports = {
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
     };
     if (req.param('locationid') !== undefined) {
-      var locations = await Location.find({
-        where: { id: req.param('locationid') },
-        skip: options.skip,
-        limit: options.limit,
-        sort: options.sort
-      }).populate('geofences')
+      var geofences = await Geofence.find({
+                              where: { location: req.param('locationid') },
+                              skip: options.skip,
+                              limit: options.limit,
+                              sort: options.sort
+                              })
+                              .populate('messageOnTrigger')
+                              .populate('messageAfterDelay')
+                              .populate('location')
+                              .intercept('UsageError', (err) => {
+                                return ResponseService.json(400, res, "Geofences could not be populated: invalid data.", err)
+                              });
       var responseData = {
-        locations,
+        geofences,
         skip: options.skip,
         limit: options.limit,
         //total: totalCount || 0

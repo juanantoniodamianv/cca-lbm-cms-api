@@ -36,7 +36,13 @@ module.exports = {
       })
     sails.log.info(`Message History has been saved successfully.`)
     return 0; 
-  }
+  },
+
+  getTotalCount: async () => {
+    var totalCount = await MessageHistory.count();
+    if (totalCount) { totalCount = +totalCount; }
+		return totalCount;
+	},
 
 };
 

@@ -44,31 +44,6 @@ module.exports = {
     return ResponseService.json(200, res, "User created successfully", responseData)
   },
 
-/*   index: async (req, res, next) => {
-    var totalCount;
-    var options = {
-      limit: req.param('limit') || undefined,
-      skip: req.param('skip') || undefined,
-      sort: req.param('sort') || "createdAt desc" // columnName desc||asc
-    };
-		await User.getTotalCount().then(count => { totalCount = count })
-    var users = await User.find({
-                  skip: options.skip,
-                  limit: options.limit,
-                  sort: options.sort,
-                }).intercept('UsageError', (err) => {
-                  return ResponseService.json(400, res, "Users could not be found: invalid data.", err)
-                });
-    var responseData = {
-      users, 
-      skip: options.skip,
-      limit: options.limit,
-      total: totalCount || 0
-    }
-    if (responseData.total === 0) return ResponseService.json(204, res, responseData)
-    return ResponseService.json(200, res, responseData)
-  }, */
-
   index: async (req, res, next) => {
     var totalCount;
     var responseData = {};

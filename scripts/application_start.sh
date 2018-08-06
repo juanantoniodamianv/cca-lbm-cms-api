@@ -30,12 +30,14 @@ SecurityGroup=`/usr/bin/curl -s http://169.254.169.254/latest/meta-data/security
 if [ "$SecurityGroup" = "cca-lbm-cms-api-production" ]; then
   cd /home/ubuntu/cca-lbm-cms-api
   echo "$(date '+%F %T') Starting server" >> /home/ubuntu/deployment_logs/start_server.log 2>&1
+  cp /home/ubuntu/.env /home/ubuntu/cca-lbm-cms-api/.env
   npm start --production >> /home/ubuntu/deployment_logs/start_server.log > /dev/null 2> /dev/null < /dev/null &
 fi
 
 if [ "$SecurityGroup" = "cca-lbm-cms-api-develop" ]; then
   cd /home/ubuntu/cca-lbm-cms-api
   echo "$(date '+%F %T') Starting server" >> /home/ubuntu/deployment_logs/start_server.log 2>&1
+  cp /home/ubuntu/.env /home/ubuntu/cca-lbm-cms-api/.env
   npm start --development >> /home/ubuntu/deployment_logs/start_server.log > /dev/null 2> /dev/null < /dev/null &
 fi
 

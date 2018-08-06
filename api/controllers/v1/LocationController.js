@@ -61,9 +61,15 @@ module.exports = {
                             .populate('messages')
                             .populate('beacons')
                             .populate('geofences')
-      .intercept('UsageError', (err) => {
-        return ResponseService.json(400, res, "Locations with Messages could not be populated: invalid data.", err)
-      });
+                            .intercept('UsageError', (err) => {
+                              return ResponseService.json(400, res, "Locations with Messages could not be populated: invalid data.", err)
+                            });
+    // --> COUNT method for message, beacon and geofence relationship
+    locations.forEach(location => {
+      location.messages = location.messages.length
+      location.beacons = location.beacons.length
+      location.geofences = location.geofences.length
+    });
     var responseData = {
       locations,
       skip: options.skip,

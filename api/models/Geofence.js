@@ -53,8 +53,12 @@ module.exports = {
     return this;
   },
 
-  getTotalCount: async () => {
-    var totalCount = await Geofence.count();
+  getTotalCount: async (locationId) => {
+    if (locationId !== undefined) {
+      var totalCount = await Geofence.count({where: {location: locationId}});
+    } else {
+      var totalCount = await Geofence.count();
+    }
     if (totalCount) { totalCount = +totalCount; }
 		return totalCount;
   },

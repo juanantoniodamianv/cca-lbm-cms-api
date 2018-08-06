@@ -55,8 +55,12 @@ module.exports = {
     return this;
   },
   
-  getTotalCount: async () => {
-    var totalCount = await Beacon.count();
+  getTotalCount: async (locationId) => {
+    if (locationId !== undefined) {
+      var totalCount = await Beacon.count({where: {location: locationId}});
+    } else {
+      var totalCount = await Beacon.count();
+    }
     if (totalCount) { totalCount = +totalCount; }
 		return totalCount;
   },

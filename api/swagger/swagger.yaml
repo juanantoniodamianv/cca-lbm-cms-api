@@ -744,6 +744,42 @@ paths:
           description: All beacons has been retrieved with specific location.
         204:
           description: No content.
+
+  /notifications:
+    post:
+      summary: Called when device has entered a specified Geofence or found a beacon.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: newNotification
+          description: Create notification
+          schema:
+            $ref: "#/definitions/NotificationNew"
+      responses: 
+        200:
+          description: Ok
+        400:
+          description: Error
+    
+    get:
+      summary: Get a list of all notifications sent
+      consumes:
+        - application/json
+      parameters:
+        - in: query
+          name: locationid
+          description: Location Id.
+          type: string
+          required: false
+      responses:
+        200:
+          description: Ok
+        204:
+          description: Not results retrieved
+        400:
+          description: Error     
+
   
 
 definitions:
@@ -956,5 +992,17 @@ definitions:
         type: number
       location:
         type: string
-
+  NotificationNew:
+    type: object
+    required:
+      - deviceId
+      - triggerType
+      - triggerId
+    properties:
+      deviceId:
+        type: string
+      triggerType:
+        type: string
+      triggerId:
+        type: string
       

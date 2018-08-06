@@ -94,10 +94,13 @@ module.exports = {
         //total: totalCount || 0
       }
     } else {
-      var geofences = await Geofence.find(options).populate('location')
-        .intercept('UsageError', (err) => {
-          return ResponseService.json(400, res, "Geofence with Locations could not be populated: invalid data.", err)
-        });
+      var geofences = await Geofence.find(options)
+                        .populate('messageOnTrigger')
+                        .populate('messageAfterDelay')
+                        .populate('location')
+                        .intercept('UsageError', (err) => {
+                          return ResponseService.json(400, res, "Geofence with Locations could not be populated: invalid data.", err)
+                        });
       var responseData = {
         geofences,
         skip: options.skip,

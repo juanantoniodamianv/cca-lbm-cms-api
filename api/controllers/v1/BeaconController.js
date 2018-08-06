@@ -94,10 +94,13 @@ module.exports = {
         //total: totalCount || 0
       }
     } else {
-      var beacons = await Beacon.find(options).populate('location')
-        .intercept('UsageError', (err) => {
-          return ResponseService.json(400, res, "Beacon with Locations could not be populated: invalid data.", err)
-        });
+      var beacons = await Beacon.find(options)
+                      .populate('messageOnTrigger')
+                      .populate('messageAfterDelay')
+                      .populate('location')
+                      .intercept('UsageError', (err) => {
+                        return ResponseService.json(400, res, "Beacon with Locations could not be populated: invalid data.", err)
+                      });
       var responseData = {
         beacons,
         skip: options.skip,

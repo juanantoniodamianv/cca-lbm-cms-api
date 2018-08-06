@@ -19,11 +19,18 @@ module.exports = {
     },
     message: {
       type: "string"
-    }
+    },
+
+    // Relationships
+    location: {
+      model: "location"
+    },
   },
 
+  // I need locationId to association with trigger message?
   createMessageHistory: async (deviceId, trigger, triggerType) => {
     var data = {
+      location: trigger.location, // <-- locationId to beacon or geofence with association, neccessary to index function
       historyType: triggerType,
       name: trigger.name,
       userId: deviceId,

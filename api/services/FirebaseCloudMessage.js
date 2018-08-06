@@ -57,8 +57,8 @@ module.exports = {
       const message = Object.assign({ notification: { title, body }, token: device, data: payload }, opts)
       const result = await admin.messaging(app).send(message)
       return exits.success(result)
-    }catch(err) {
-      return exits.error(err)
+    }catch(error) {
+      return exits.error(error)
     }
   }
 }

@@ -67,13 +67,14 @@ module.exports = {
   },
 
   index: async (req, res) => {
-    /* var totalCount;
-		Beacon.getTotalCount().then(count => { totalCount = count }) */
+    var totalCount;
+    var locationId = req.param('locationid') || undefined
     var options = {
 			limit: req.param('limit') || undefined,
 			skip: req.param('skip') || undefined,
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
     };
+    Beacon.getTotalCount(locationId).then(count => { totalCount = count })
     if (req.param('locationid') !== undefined) {
       var beacons = await Beacon.find({
                               where: { location: req.param('locationid') },
@@ -91,7 +92,7 @@ module.exports = {
         beacons,
         skip: options.skip,
         limit: options.limit,
-        //total: totalCount || 0
+        total: totalCount || 0
       }
     } else {
       var beacons = await Beacon.find(options)
@@ -105,7 +106,7 @@ module.exports = {
         beacons,
         skip: options.skip,
         limit: options.limit,
-        //total: totalCount || 0
+        total: totalCount || 0
       }
     }
     if (responseData.total === 0) return ResponseService.json(204, res, responseData)

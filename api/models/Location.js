@@ -47,6 +47,9 @@ module.exports = {
       type: "boolean",
       defaultsTo: true
     },
+
+    // Relationships
+
     messages: {
       collection: 'message',
       via: 'locations',
@@ -57,6 +60,10 @@ module.exports = {
     },
     beacons: {
       collection: 'beacon',
+      via: 'location'
+    },
+    messageHistory: {
+      collection: 'messageHistory',
       via: 'location'
     }
   },

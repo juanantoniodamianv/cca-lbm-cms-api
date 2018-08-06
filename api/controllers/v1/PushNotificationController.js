@@ -42,25 +42,44 @@ module.exports = {
     var options = {
       limit: req.param('limit') || undefined,
       skip: req.param('skip') || undefined,
-      sort: req.param('sort') || "createdAt desc" //columnName desc/asc
+      sort: req.param('sort') || "createdAt desc", //columnName desc/asc
     };
-    await MessageHistory.getTotalCount().then(count => {
-      totalCount = count;
-    })
-    await MessageHistory.find({
-      skip: options.skip,
-      limit: options.limit,
-      sort: options.sort
-    }).intercept('UsageError', (err) => {
-      return ResponseService.json(400, res, "Message History could not be found: invalid data.", err)
-    }).then(messageHistory => {
-      responseData = {
-        messageHistory,
+    var location = req.param('locationid') || undefined;
+    if (location) {
+      await MessageHistory.find({
+        where: { location },
         skip: options.skip,
         limit: options.limit,
-        total: totalCount || 0
-      }
-    })
+        sort: options.sort
+      })
+      .intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "Message History could not be found: invalid data.", err)
+      }).then(messageHistory => {
+        responseData = {
+          messageHistory,
+          skip: options.skip,
+          limit: options.limit,
+        }
+      })
+    } else {
+      await MessageHistory.getTotalCount().then(count => {
+        totalCount = count;
+      })
+      await MessageHistory.find({
+        skip: options.skip,
+        limit: options.limit,
+        sort: options.sort
+      }).intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "Message History could not be found: invalid data.", err)
+      }).then(messageHistory => {
+        responseData = {
+          messageHistory,
+          skip: options.skip,
+          limit: options.limit,
+          total: totalCount || 0
+        }
+      })
+    }
     return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
   },
   

@@ -780,7 +780,39 @@ paths:
         400:
           description: Error     
 
-  
+  /locations/location-number/{locationNumber}/beacons:
+    get:
+      summary: Get all beacons for a specific location
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: locationNumber
+          description: The location number
+          type: string
+          required: true
+      responses:
+        200: 
+          description: All beacons has been retrieved with specific location.
+        204:
+          description: No content.
+          
+  /locations/location-number/{locationNumber}/geofences:
+    get:
+      summary: Get all geofences for a specific location
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: locationNumber
+          description: The location number.
+          type: string
+          required: true
+      responses:
+        200: 
+          description: All geofences has been retrieved with specific location.
+        204:
+          description: No content.
 
 definitions:
   UserSignUp:           

@@ -32,8 +32,23 @@ module.exports.policies = {
     '*': true
   },
 
+  
   'TestController': {
     '*': true
-  }
+  },
+
+  /* ONLY FOR APP */
+  'v1/PushNotificationController': {
+    'triggerPushNotification': true,
+  },
+
+  'v1/BeaconController': {
+    'indexPerLocationNumber': true,
+  },
+
+  'v1/GeofenceController': {
+    'indexPerLocationNumber': true,
+  },
+  /* ##### */
 };
 

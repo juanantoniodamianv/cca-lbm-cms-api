@@ -21,6 +21,7 @@ module.exports = {
     locationNumber: {
       type: "number",
       required: true,
+      unique: true,
     },
     memberId: {
       type: "string",

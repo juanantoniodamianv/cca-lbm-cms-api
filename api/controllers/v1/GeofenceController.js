@@ -112,6 +112,21 @@ module.exports = {
     if (responseData.total === 0) return ResponseService.json(204, res, responseData)
     return ResponseService.json(200, res, responseData)
   },
+
+  indexPerLocationNumber: async (req, res) => {
+    if (req.param('locationNumber') === undefined)  return ResponseService.json(400, res, "Error with retrieved Geofences.", err)
+    var location = await Location.findOne({ locationNumber: req.param('locationNumber') })
+      .select(['id']) 
+      .populate('geofences', { select: ['id', 'radius', 'longitude', 'latitude'] }) 
+      .intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "Geofences could not be populated: invalid data.", err)
+      });
+    var responseData = {
+      geofences: location.geofences
+    }
+    if (responseData.total === 0) return ResponseService.json(204, res, responseData)
+    return ResponseService.json(200, res, responseData)
+  },
   
   show: async (req, res) => {
     var geofence = await Geofence.find(req.param('geofenceid')).populate('location')

@@ -1,20 +1,24 @@
+const cron = require('node-schedule');
+
 module.exports = {
   triggerPushNotification: async (req, res) => {
-    // deviceId, beaconId/geofenceId
     var deviceId = req.body.deviceId;
-    var triggerType = req.body.triggerType; // beaconId || geofenceId
-    var triggerId = req.body.triggerId; 
+    var triggerType = req.body.triggerType; // string: "beacon" || "geofence"
+    var triggerId = req.body.triggerId;     // string: beaconId || geofenceId
+    var trigger;                            // object: beaconId || geofenceId
     var title;
     var body;
-    // Find beaconId || geofenceId, with triggerId
+    var messageAfterDelay;
+    var delayHours;
+    /* FIND BEACON OR GEOFENCE, WITH triggerId */
     if (triggerType === 'beacon') {
       await Beacon.getById(triggerId).then(beacon => {
         if (beacon !== undefined && beacon.messageOnTrigger) {
           title = beacon.name;
           body = beacon.messageOnTrigger.message;
-          MessageHistory.createMessageHistory(deviceId, beacon, triggerType);
+          trigger = beacon;
         } else {
-          // not exist beacon or not have a message to send
+          /* NOT EXIST BEACON OR NOT HAVE A MESSAGE TO SEND */
           return res.json('Error, beacon problem.');
         }
       })
@@ -23,17 +27,34 @@ module.exports = {
         if (geofence !== undefined && geofence.messageOnTrigger) {
           title = geofence.name;
           body = geofence.messageOnTrigger.message;
-          MessageHistory.createMessageHistory(deviceId, geofence, triggerType);
+          trigger = geofence;
         } else {
-          // not exist geofence or not have a message to send
+          /* NOT EXIST GEOFENCE OR NOT HAVE A MESSAGE TO SEND */
           return res.json('Error, geofence problem.');
         }
       })
     }
-    if (title !== undefined && body !== undefined) {
+    /* SENT MESSAGE ON TRIGGER */
+    if (title !== undefined && body !== undefined && deviceId !== undefined && trigger !== undefined && triggerType !== undefined) {
+      MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
       await FirebaseCloudMessage.sendPushNotification({deviceId, title, body})
     }
+    /* SENT MESSAGE AFTER DELAY (IF EXISTS) */
+    if ((trigger.messageAfterDelay !== null && trigger.messageAfterDelay.message != '') && trigger.enableMessageAfterDelay) {
+      messageAfterDelay = trigger.messageAfterDelay.message;
+      delayHours = trigger.delayHours || 0;
+      delayPushNotification(deviceId, trigger, triggerType, title, messageAfterDelay, delayHours);
+    }
     return res.json('ok'); 
+  },
+
+  delayPushNotification: (deviceId, trigger, triggerType, title, body, delayHours) => {
+    var date = new Date();
+    date.setHours(date.getHours()+delayHours);
+    cron.scheduleJob(date, async () => {
+      await MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
+      await FirebaseCloudMessage.sendPushNotification({deviceId, title, body});
+    });      
   },
 
   index: async(req, res) => {

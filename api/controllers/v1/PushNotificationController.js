@@ -19,7 +19,8 @@ module.exports = {
           trigger = beacon;
         } else {
           /* NOT EXIST BEACON OR NOT HAVE A MESSAGE TO SEND */
-          return res.json('Error, beacon problem.');
+          //return res.json('Error, beacon problem.');
+          res.json(404, { error: "Not exist beacon or not have a message to send." })
         }
       })
     } else if (triggerType === 'geofence') {
@@ -30,7 +31,7 @@ module.exports = {
           trigger = geofence;
         } else {
           /* NOT EXIST GEOFENCE OR NOT HAVE A MESSAGE TO SEND */
-          return res.json('Error, geofence problem.');
+          res.json(404, { error: "Not exist geofence or not have a message to send." })
         }
       })
     }

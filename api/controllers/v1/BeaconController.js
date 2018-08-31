@@ -125,7 +125,8 @@ module.exports = {
       beacons: location.beacons
     }
     if (responseData.total === 0) return ResponseService.json(204, res, responseData)
-    return ResponseService.json(200, res, responseData)
+    //return ResponseService.json(200, res, location.beacons)
+    return res.json(location.beacons)
   },
 
   show: async (req, res) => {

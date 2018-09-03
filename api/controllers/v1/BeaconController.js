@@ -116,17 +116,20 @@ module.exports = {
   indexPerLocationNumber: async (req, res) => {
     if (req.param('locationNumber') === undefined)  return ResponseService.json(400, res, "Error with retrieved Beacons.", err)
     var location = await Location.findOne({ locationNumber: req.param('locationNumber') })
-      .select(['id']) 
+      //.select(['id']) 
       .populate('beacons', { select: ['id', 'majorId', 'minorId', 'triggerProximity'] }) 
+      .populate('geofences', { select: ['id', 'radius', 'longitude', 'latitude'] }) 
       .intercept('UsageError', (err) => {
-        return ResponseService.json(400, res, "Beacons could not be populated: invalid data.", err)
+        return ResponseService.json(400, res, "Beacons and Geofences could not be populated: invalid data.", err)
       });
     var responseData = {
-      beacons: location.beacons
+      locationNumber: location.locationNumber,
+      beacons: location.beacons,
+      geofences: location.geofences
     }
     if (responseData.total === 0) return ResponseService.json(204, res, responseData)
-    //return ResponseService.json(200, res, location.beacons)
-    return res.json(location.beacons)
+    return ResponseService.json(200, res, responseData)
+    //return res.json(location.beacons)
   },
 
   show: async (req, res) => {

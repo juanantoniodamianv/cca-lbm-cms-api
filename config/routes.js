@@ -70,8 +70,9 @@ module.exports.routes = {
   'get /v1/locations/:locationid/beacons': 'v1/BeaconController.index',                    // <-- Get all beacons for a specific location.
 
   /* ONLY FOR APP */
-  'get /v1/locations/location-number/:locationNumber/beacons': 'v1/BeaconController.indexPerLocationNumber',
-  'get /v1/locations/location-number/:locationNumber/geofences': 'v1/GeofenceController.indexPerLocationNumber',
+  //'get /v1/locations/location-number/:locationNumber/beacons': 'v1/BeaconController.indexPerLocationNumber',
+  //'get /v1/locations/location-number/:locationNumber/geofences': 'v1/GeofenceController.indexPerLocationNumber',
+  'get /v1/locations/location-number/:locationNumber': 'v1/BeaconController.indexPerLocationNumber',
 
   'get /v1/locations/:locationid/beacons/:beaconid/messages': 'v1/BeaconController.getAllBeaconMessages', // <-- Get all messages associated to a specific beacon
   'post /v1/locations/:locationid/beacons/:beaconid/messages': 'v1/BeaconController.postBeaconMessage',   // <-- Associate message to a specific beacon

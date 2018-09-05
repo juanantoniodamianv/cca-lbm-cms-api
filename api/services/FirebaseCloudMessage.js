@@ -58,7 +58,7 @@ module.exports = {
       const result = await admin.messaging(app).send(message)
       return exits.success(result)
     }catch(error) {
-      return exits.error(error)
+      return exits.error()
     }
   }
 }

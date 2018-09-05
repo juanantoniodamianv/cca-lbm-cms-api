@@ -49,15 +49,6 @@ module.exports = {
     return res.json('ok'); 
   },
 
-  delayPushNotification: (deviceId, trigger, triggerType, title, body, delayHours) => {
-    var date = new Date();
-    date.setHours(date.getHours()+delayHours);
-    cron.scheduleJob(date, async () => {
-      await MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
-      await FirebaseCloudMessage.sendPushNotification({deviceId, title, body});
-    });      
-  },
-
   index: async(req, res) => {
     var totalCount;
     var responseData = {};
@@ -106,3 +97,12 @@ module.exports = {
   },
   
 };
+
+function delayPushNotification (deviceId, trigger, triggerType, title, body, delayHours) {
+  var date = new Date();
+  date.setHours(date.getHours()+delayHours);
+  cron.scheduleJob(date, async () => {
+    await MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
+    await FirebaseCloudMessage.sendPushNotification({deviceId, title, body});
+  });      
+}

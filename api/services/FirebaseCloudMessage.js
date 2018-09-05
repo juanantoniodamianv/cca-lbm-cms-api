@@ -61,7 +61,7 @@ module.exports = {
     //   return exits.error()
     // }
 
-    const { device, title, body, payload, opts } = inputs
+    const { device, title, body } = inputs
     const message = Object.assign({ notification: { title, body }, token: device })
     const result = await admin.messaging(app).send(message).then((response) => {
       sails.log.info('Successfully sent message:', response);

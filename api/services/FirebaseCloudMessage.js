@@ -52,13 +52,22 @@ module.exports = {
   
   // enviar push notification on trigger.. ver-> on delay
   sendPushNotification: async (inputs, exits) => {
-    try {
-      const { device, title, body, payload, opts } = inputs
-      const message = Object.assign({ notification: { title, body }, token: device, data: payload }, opts)
-      const result = await admin.messaging(app).send(message)
-      return exits.success(result)
-    }catch(error) {
-      return exits.error()
-    }
+    // try {
+    //   const { device, title, body, payload, opts } = inputs
+    //   const message = Object.assign({ notification: { title, body }, token: device, data: payload }, opts)
+    //   const result = await admin.messaging(app).send(message)
+    //   return exits.success(result)
+    // }catch(error) {
+    //   return exits.error()
+    // }
+
+    const { device, title, body, payload, opts } = inputs
+    const message = Object.assign({ notification: { title, body }, token: device, data: payload }, opts)
+    const result = await admin.messaging(app).send(message).then((response) => {
+      sails.log.info('Successfully sent message:', response);
+    })
+    .catch((error) => {
+      sails.log.warn('Error sending message:', error);
+    });
   }
 }

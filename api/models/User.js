@@ -106,7 +106,7 @@ module.exports = {
 
   sendEmailForgotPassword: (userRecord, token) => {
     let url = "https://cca-lbm-dev.ballastlane.com/#/reset?token=" + token;
-    let receiveName = userRecord.lastName || userRecord.firstName || userRecord.email;
+    let receiveName = userRecord.firstName || userRecord.lastName || userRecord.email;
     var message = {
       "html": "<div><p>Dear " + receiveName + "</p><p>Hi! We recently had a request to reset your account password at CCA-CMS.</p><p>If you see that the above information is not correct, contact us at support@ballastlane.com</p></div><div><p>To reset your password account, click on the following link <a href='" + url + "'>here</a></p></div>",
       "subject": "Forgot password?",

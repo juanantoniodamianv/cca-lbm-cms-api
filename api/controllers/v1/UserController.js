@@ -73,23 +73,24 @@ module.exports = {
     return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
  },
 
-  search: (req, res, next) => {
-    var searchObj = {};
-    searchObj[req.param('criteria')] = req.param('value');
-    sails.log.info(searchObj);
-    let criteria = req.param('criteria');
-    let value = req.param('value');
-    sails.log.info(criteria);
-    sails.log.info(value);
-    User.find()
-    .where({ criteria : { contains : value } })
+  search: (req, res) => {
+    var value = req.param('value');    
+    var criteria = req.param('criteria');
+    var condition = {};
+    condition['contains'] = value;
+    var query = {};
+    query[criteria] = condition;    
+    sails.log.info(query); /*  --> { email: { contains: 'antonio' } } */
+    User.find({
+      where: query
+    })
     .exec((err, users) => {
-      if (err) return next(err);
+      if (err) return ResponseService.json(400, res, "Users could not be found: invalid data.", err)
       var responseData = {
         users, 
-        total: users.length
+        total: users.length || 0
       }
-      return ResponseService.json(200, res, responseData)
+      return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
     });
   },
 

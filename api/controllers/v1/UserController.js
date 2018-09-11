@@ -75,10 +75,15 @@ module.exports = {
 
   search: (req, res) => {
     var db = User.getDatastore().manager;
-    var value = req.param('value');
+    var value = new RegExp(req.param('value'));
         
     db.collection('user').find({
-      $text: { $search: value }
+      $or: [
+        {email: {$regex: value}},
+        {firstName: {$regex: value}},
+        {lastName: {$regex: value}},
+        {organization: {$regex: value}} 
+      ]
     })
 
     

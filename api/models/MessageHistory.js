@@ -4,6 +4,7 @@
  * @description :: A model definition.  Represents a database table/collection/etc.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
+var moment = require('moment');
 
 module.exports = {
 
@@ -49,7 +50,30 @@ module.exports = {
     var totalCount = await MessageHistory.count();
     if (totalCount) { totalCount = +totalCount; }
 		return totalCount;
-	},
+  },
+  
+  isAvailableToPushNotification: async (inputs) => {  // --> inputs: {deviceId as userId, triggerType as historyType, body as message}
+    var expiresAt = 2;  // Value to expire message on push notification, after this data value the notification has been available to sent
+    var createdAt = await MessageHistory.findOne({
+      where: {
+        userId: inputs.deviceId,
+        historyType: inputs.triggerType,
+        message: inputs.body
+      },
+      select: ['createdAt']
+    }).sort('createdAt DESC');
+    sails.log.info(`****createdAt:**** ${createdAt}`);
+
+    if (createdAt == undefined) return true;
+    
+    let date = moment(createdAt);
+    date = date.add(expiresAt, 'minutes');
+    if (moment() > date) {
+      return true
+    } else {
+      return false
+    }
+  },
 
 };
 

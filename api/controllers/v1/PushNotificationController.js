@@ -35,6 +35,8 @@ module.exports = {
         }
       })
     }
+    /* Device is available to receive push notification? */
+    if (!MessageHistory.isAvailableToPushNotification({deviceId, triggerType, body})) return res.json(404, { error: "This message has already been sent a moment ago." })
     /* SENT MESSAGE ON TRIGGER */
     if (title !== undefined && body !== undefined && deviceId !== undefined && trigger !== undefined && triggerType !== undefined) {
       MessageHistory.createMessageHistory(deviceId, trigger, triggerType);

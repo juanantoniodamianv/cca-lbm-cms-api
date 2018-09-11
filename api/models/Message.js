@@ -21,7 +21,6 @@ module.exports = {
     },
     deeplink: {
       type: "string",
-
     },
     locations: {
       collection: 'location',

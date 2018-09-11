@@ -74,17 +74,26 @@ module.exports = {
  },
 
   search: (req, res) => {
-    var value = req.param('value');    
+    var db = User.getDatastore().manager;
+    var value = req.param('value');
+        
+    db.collection('user').find({
+      $text: { $search: value }
+    })
+
+    
+    
+    /* 
     var criteria = req.param('criteria');
     var condition = {};
     condition['contains'] = value;
     var query = {};
     query[criteria] = condition;    
-    sails.log.info(query); /*  --> { email: { contains: 'antonio' } } */
+    sails.log.info(query); 
     User.find({
       where: query
-    })
-    .exec((err, users) => {
+    }) */
+    .toArray((err, users) => {
       if (err) return ResponseService.json(400, res, "Users could not be found: invalid data.", err)
       var responseData = {
         users, 

@@ -145,6 +145,27 @@ paths:
         400:
           description: User could not be destroyed.
 
+   /user/search:
+    summary: Search user account.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+        - in: query
+          name: value
+          description: Value to find.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Users match.
+        204:
+          description: There are no users that match the value entered.
+
   /forgot:
     post:
       summary: Forgot password.

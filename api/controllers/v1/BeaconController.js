@@ -122,6 +122,7 @@ module.exports = {
       .intercept('UsageError', (err) => {
         return ResponseService.json(400, res, "Beacons and Geofences could not be populated: invalid data.", err)
       });
+    if (location === undefined) return ResponseService.json(404, res, "This location do not exist.");
     var responseData = {
       locationNumber: location.locationNumber,
       beacons: location.beacons,

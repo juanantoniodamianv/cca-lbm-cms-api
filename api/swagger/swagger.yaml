@@ -145,8 +145,9 @@ paths:
         400:
           description: User could not be destroyed.
 
-   /user/search:
-    summary: Search user account.
+  /user/search:
+    get:
+      summary: Search user account.
       consumes:
         - application/json
       parameters:

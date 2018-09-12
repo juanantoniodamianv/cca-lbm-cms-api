@@ -52,21 +52,20 @@ module.exports = {
 		return totalCount;
   },
   
-  isAvailableToPushNotification: async (inputs) => {  // --> inputs: {deviceId as userId, triggerType as historyType, body as message}
+  isAvailableToPushNotification: async (deviceId, triggerType, body) => {  // --> inputs: {deviceId as userId, triggerType as historyType, body as message}
     var expiresAt = 2;  // Value to expire message on push notification, after this data value the notification has been available to sent
-    var createdAt = await MessageHistory.findOne({
-      where: {
-        userId: inputs.deviceId,
-        historyType: inputs.triggerType,
-        message: inputs.body
-      },
-      select: ['createdAt']
-    }).sort('createdAt DESC');
-    sails.log.info(`****createdAt:**** ${createdAt}`);
+    //sails.log(`Inputs: ${deviceId}, ${triggerType}, ${body}`);
+    var result = await MessageHistory.find({
+      userId: deviceId,
+      historyType: triggerType,
+      message: body
+    }).limit(1);
 
-    if (createdAt == undefined) return true;
+    if (result == undefined) return true;
+    sails.log.info(`****createdAt:**** ${result}`);
+
     
-    let date = moment(createdAt);
+    let date = moment(result.createdAt);
     date = date.add(expiresAt, 'minutes');
     if (moment() > date) {
       return true

@@ -16,6 +16,7 @@ module.exports = {
         if (beacon !== undefined && beacon.messageOnTrigger) {
           title = beacon.name;
           body = beacon.messageOnTrigger.message;
+          url = beacon.messageOnTrigger.deeplink;
           trigger = beacon;
         } else {
           /* NOT EXIST BEACON OR NOT HAVE A MESSAGE TO SEND */
@@ -28,6 +29,7 @@ module.exports = {
         if (geofence !== undefined && geofence.messageOnTrigger) {
           title = geofence.name;
           body = geofence.messageOnTrigger.message;
+          url = geofence.messageOnTrigger.deeplink;
           trigger = geofence;
         } else {
           /* NOT EXIST GEOFENCE OR NOT HAVE A MESSAGE TO SEND */
@@ -36,17 +38,17 @@ module.exports = {
       })
     }
     /* Device is available to receive push notification? */
-    if (!MessageHistory.isAvailableToPushNotification({deviceId, triggerType, body})) return res.json(404, { error: "This message has already been sent a moment ago." })
+    //if (MessageHistory.isAvailableToPushNotification(deviceId, triggerType, body) === false) return res.json(404, { error: "This message has already been sent a moment ago." })
     /* SENT MESSAGE ON TRIGGER */
     if (title !== undefined && body !== undefined && deviceId !== undefined && trigger !== undefined && triggerType !== undefined) {
       MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
-      await FirebaseCloudMessage.sendPushNotification({deviceId, title, body})
+      await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
     }
     /* SENT MESSAGE AFTER DELAY (IF EXISTS) */
     if ((trigger.messageAfterDelay !== null && trigger.messageAfterDelay.message != '') && trigger.enableMessageAfterDelay) {
       messageAfterDelay = trigger.messageAfterDelay.message;
       delayHours = trigger.delayHours || 0;
-      delayPushNotification(deviceId, trigger, triggerType, title, messageAfterDelay, delayHours);
+      delayPushNotification(deviceId, trigger, triggerType, title, messageAfterDelay, url, delayHours);
     }
     return res.json('ok'); 
   },
@@ -100,11 +102,11 @@ module.exports = {
   
 };
 
-function delayPushNotification (deviceId, trigger, triggerType, title, body, delayHours) {
+function delayPushNotification (deviceId, trigger, triggerType, title, body, url, delayHours) {
   var date = new Date();
   date.setHours(date.getHours()+delayHours);
   cron.scheduleJob(date, async () => {
     await MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
-    await FirebaseCloudMessage.sendPushNotification({deviceId, title, body});
+    await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url});
   });      
 }

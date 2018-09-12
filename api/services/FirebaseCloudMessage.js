@@ -66,8 +66,9 @@ module.exports = {
     const token = inputs.deviceId;
     const title = inputs.title;
     const body = inputs.body;
+    const url = inputs.url;
 
-    const message = Object.assign({ notification: { title, body }, token })
+    const message = Object.assign({ notification: { title, body }, token, data: {'url': url} })
     // var message = {
     //   notification: {
     //     title,

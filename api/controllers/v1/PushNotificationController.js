@@ -10,6 +10,7 @@ module.exports = {
     var body;
     var messageAfterDelay;
     var delayHours;
+    var isAvailable;
     /* FIND BEACON OR GEOFENCE, WITH triggerId */
     if (triggerType === 'beacon') {
       await Beacon.getById(triggerId).then(beacon => {
@@ -38,9 +39,14 @@ module.exports = {
       })
     }
     /* Device is available to receive push notification? */
-    //if (MessageHistory.isAvailableToPushNotification(deviceId, triggerType, body) === false) return res.json(404, { error: "This message has already been sent a moment ago." })
+    await MessageHistory.isAvailableToPushNotification(deviceId, triggerType, body).then(result => {
+      isAvailable = result;  
+    });
+    sails.log.info(isAvailable)
+    if (!isAvailable) return res.json(404, { error: "This message has already been sent a moment ago." });
     /* SENT MESSAGE ON TRIGGER */
     if (title !== undefined && body !== undefined && deviceId !== undefined && trigger !== undefined && triggerType !== undefined) {
+      sails.log.info('Sending Message')
       MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
       await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
     }

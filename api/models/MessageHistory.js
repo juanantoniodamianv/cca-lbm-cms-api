@@ -52,26 +52,30 @@ module.exports = {
 		return totalCount;
   },
   
-  isAvailableToPushNotification: async (deviceId, triggerType, body) => {  // --> inputs: {deviceId as userId, triggerType as historyType, body as message}
+  isAvailableToPushNotification: async (deviceId, triggerType, body) => {  
     var expiresAt = 2;  // Value to expire message on push notification, after this data value the notification has been available to sent
-    //sails.log(`Inputs: ${deviceId}, ${triggerType}, ${body}`);
-    var result = await MessageHistory.find({
-      userId: deviceId,
-      historyType: triggerType,
-      message: body
-    }).limit(1);
+    var expiresTime = 'minutes';  /*  --> 'hours' 'minutes' or 'seconds' */
+    var query = await MessageHistory.find({
+      where: {
+        userId: deviceId,
+        historyType: triggerType,
+        message: body
+      },
+      select: ['createdAt'],
+      sort: ['createdAt DESC'],
+      limit: 1
+    });
 
-    if (result == undefined) return true;
-    sails.log.info(`****createdAt:**** ${result}`);
-
+    if (query == undefined) return false;
     
-    let date = moment(result.createdAt);
-    date = date.add(expiresAt, 'minutes');
-    if (moment() > date) {
-      return true
-    } else {
-      return false
-    }
+    let date = moment(query[0].createdAt);
+    sails.log.info(`****createdAt:**** ${date}`);
+    date = date.add(expiresAt, expiresTime);
+    sails.log.info(`****expiresAt:**** ${date}`);
+    sails.log.info(`****Now:**** ${moment()}`);
+    sails.log.info(moment() > date);
+    return moment() > date;
+
   },
 
 };

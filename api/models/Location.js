@@ -89,5 +89,12 @@ module.exports = {
     sails.log.info(`MessageLocation: ${messageLocation}`);
     return messageLocation;
   },
+
+  getTotalCount: async () => {
+    var totalCount = await Location.count();
+    if (totalCount) { totalCount = +totalCount; }
+		return totalCount;
+  },
+  
 };
 

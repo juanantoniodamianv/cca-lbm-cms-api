@@ -52,11 +52,15 @@ module.exports = {
   },
   
   index: async (req, res, next) => {
+    var totalCount;
 		var options = {
 			limit: req.param('limit') || undefined,
 			skip: req.param('skip') || undefined,
 			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
     };
+    await Location.getTotalCount().then(count => {
+      totalCount = count;
+    })
     var locations = await Location.find(options)
                             .populate('messages')
                             .populate('beacons')
@@ -74,7 +78,7 @@ module.exports = {
       locations,
       skip: options.skip,
 			limit: options.limit,
-			total: locations.length
+			total: totalCount || locations.length
     }
     return ResponseService.json(200, res, responseData)
   },

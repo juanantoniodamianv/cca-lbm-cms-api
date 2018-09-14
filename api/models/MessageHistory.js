@@ -65,15 +65,14 @@ module.exports = {
       sort: ['createdAt DESC'],
       limit: 1
     });
-
-    if (query == undefined) return false;
+    if (query == undefined || query.length == 0) return true;
     
     let date = moment(query[0].createdAt);
-    sails.log.info(`****createdAt:**** ${date}`);
+    //sails.log.info(`****createdAt:**** ${date}`);
     date = date.add(expiresAt, expiresTime);
-    sails.log.info(`****expiresAt:**** ${date}`);
-    sails.log.info(`****Now:**** ${moment()}`);
-    sails.log.info(moment() > date);
+    //sails.log.info(`****expiresAt:**** ${date}`);
+    //sails.log.info(`****Now:**** ${moment()}`);
+    //sails.log.info(moment() > date);
     return moment() > date;
 
   },

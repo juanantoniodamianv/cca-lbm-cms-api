@@ -42,19 +42,18 @@ module.exports = {
     await MessageHistory.isAvailableToPushNotification(deviceId, triggerType, body).then(result => {
       isAvailable = result;  
     });
-    sails.log.info(isAvailable)
-    if (!isAvailable) return res.json(404, { error: "This message has already been sent a moment ago." });
+    if (isAvailable == false) return res.json(404, { error: "This message has already been sent a moment ago." });
     /* SENT MESSAGE ON TRIGGER */
     if (title !== undefined && body !== undefined && deviceId !== undefined && trigger !== undefined && triggerType !== undefined) {
       sails.log.info('Sending Message')
       MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
-      await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
+      //await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
     }
     /* SENT MESSAGE AFTER DELAY (IF EXISTS) */
     if ((trigger.messageAfterDelay !== null && trigger.messageAfterDelay.message != '') && trigger.enableMessageAfterDelay) {
       messageAfterDelay = trigger.messageAfterDelay.message;
       delayHours = trigger.delayHours || 0;
-      delayPushNotification(deviceId, trigger, triggerType, title, messageAfterDelay, url, delayHours);
+      //delayPushNotification(deviceId, trigger, triggerType, title, messageAfterDelay, url, delayHours);
     }
     return res.json('ok'); 
   },

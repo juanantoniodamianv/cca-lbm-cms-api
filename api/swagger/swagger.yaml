@@ -351,6 +351,29 @@ paths:
         400:
           description: Location could not be created, invalid data.
 
+  /locations/search:
+    get:
+      summary: Search for locations.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+        - in: query
+          name: value
+          description: Value to find.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Locations match.
+        204:
+          description: There are no locations that match the value entered.
+
+
   /location/{id}:
     put:
       summary: Update location

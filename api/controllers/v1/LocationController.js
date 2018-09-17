@@ -110,5 +110,24 @@ module.exports = {
     return ResponseService.json(200, res, responseData)
   },
 
+  search: (req, res) => {
+    var db = Location.getDatastore().manager;
+    var value = new RegExp(req.param('value'));
+        
+    db.collection('location').find({
+      $or: [
+        {name: {$regex: value}}
+      ]
+    })
+    .toArray((err, locations) => {
+      if (err) return ResponseService.json(400, res, "Locations could not be found: invalid data.", err)
+      var responseData = {
+        locations, 
+        total: locations.length || 0
+      }
+      return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
+    });
+  },
+
 };
 

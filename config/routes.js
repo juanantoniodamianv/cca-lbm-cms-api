@@ -39,6 +39,8 @@ module.exports.routes = {
   'get /v1/location/:id': 'v1/LocationController.show',
   'put /v1/location/:id': 'v1/LocationController.update',
   'delete /v1/location/:id': 'v1/LocationController.destroy',
+  'get /v1/locations/search': 'v1/LocationController.search',
+
 
   /* Location Messages */
   'get /v1/location/:locationid/messages': 'v1/LocationController.getAllLocationMessages',           // <-- Get all messages associated to a specific location

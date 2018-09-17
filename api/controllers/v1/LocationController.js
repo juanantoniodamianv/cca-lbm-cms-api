@@ -19,7 +19,7 @@ module.exports = {
     var data = _.pick(req.body, allowedParameters);
     var newLocation = await Location.create(data)
       .intercept('E_UNIQUE', (err) => {
-        return ResponseService.json(400, res, "Location could not be created: name or memberId is already create.", err)
+        return ResponseService.json(400, res, "Location Number already in use.", err)
       })
       .intercept('UsageError', (err) => {
         return ResponseService.json(400, res, "Location could not be created: invalid data.", err)

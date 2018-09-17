@@ -11,6 +11,12 @@ module.exports = {
     var messageAfterDelay;
     var delayHours;
     var isAvailable;
+
+    /* Verified Device Id Token */
+    //var verified = await FirebaseCloudMessage.verifyToken(deviceId);
+    //sails.log.info(verified);
+    //if (!FirebaseCloudMessage.verifyToken(deviceId)) return res.json(404, { error: "Error, DeviceId token invalid." })
+
     /* FIND BEACON OR GEOFENCE, WITH triggerId */
     if (triggerType === 'beacon') {
       await Beacon.getById(triggerId).then(beacon => {
@@ -46,15 +52,23 @@ module.exports = {
     /* SENT MESSAGE ON TRIGGER */
     if (title !== undefined && body !== undefined && deviceId !== undefined && trigger !== undefined && triggerType !== undefined) {
       sails.log.info('Sending Message')
-      MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
-      //await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
+      await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
+      .then(
+        result => {
+          MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
+        }
+      )
+      .catch((error) => {
+        sails.log.warn("Error", error);
+      })
     }
     /* SENT MESSAGE AFTER DELAY (IF EXISTS) */
     if ((trigger.messageAfterDelay !== null && trigger.messageAfterDelay.message != '') && trigger.enableMessageAfterDelay) {
       messageAfterDelay = trigger.messageAfterDelay.message;
       delayHours = trigger.delayHours || 0;
-      //delayPushNotification(deviceId, trigger, triggerType, title, messageAfterDelay, url, delayHours);
+      delayPushNotification(deviceId, trigger, triggerType, title, messageAfterDelay, url, delayHours);
     }
+
     return res.json('ok'); 
   },
 
@@ -111,7 +125,7 @@ function delayPushNotification (deviceId, trigger, triggerType, title, body, url
   var date = new Date();
   date.setHours(date.getHours()+delayHours);
   cron.scheduleJob(date, async () => {
-    await MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
     await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url});
+    await MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
   });      
 }

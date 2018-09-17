@@ -49,6 +49,17 @@ module.exports = {
       outputDescription: 'Push notification failed'
     }
   },
+
+  verifyToken: (idToken) => {
+    admin.auth().verifyIdToken(idToken)
+      .then(function(decodedToken) {
+        var uid = decodedToken.uid;
+        return uid;
+      }).catch(function(error) {
+        sails.log.warn('Error, Device Id Token invalid:', error);
+        return error;
+      });
+  },
   
   // enviar push notification on trigger.. ver-> on delay
   sendPushNotification: async (inputs, exits) => {
@@ -60,7 +71,6 @@ module.exports = {
     // }catch(error) {
     //   return exits.error()
     // }
-
     
     //const { device, title, body } = inputs
     const token = inputs.deviceId;

@@ -22,6 +22,7 @@ module.exports = {
       type: "number",
       required: true,
       unique: true,
+      columnType: 'number'
     },
     memberId: {
       type: "string",

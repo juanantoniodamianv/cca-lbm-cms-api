@@ -114,5 +114,24 @@ module.exports = {
 		return ResponseService.json(200, res, responseData)
 	},
 
+	search: (req, res) => {
+    var db = Message.getDatastore().manager;
+    var value = new RegExp(req.param('value'));
+        
+    db.collection('message').find({
+      $or: [
+        {title: {$regex: value}}
+      ]
+    })
+    .toArray((err, messages) => {
+      if (err) return ResponseService.json(400, res, "Messages could not be found: invalid data.", err)
+      var responseData = {
+        messages, 
+        total: messages.length || 0
+      }
+      return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
+    });
+  },
+
 };
 

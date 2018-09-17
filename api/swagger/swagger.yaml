@@ -231,6 +231,28 @@ paths:
           description: Message could not be created, title is already create.
         400:
           description: Message could not be created, invalid data.
+
+  /messages/search:
+    get:
+      summary: Search for messages.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token.
+          type: string
+          required: true
+        - in: query
+          name: value
+          description: Value to find.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Messages match.
+        204:
+          description: There are no messages that match the value entered.
   
   /message/{id}:
     put:

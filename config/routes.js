@@ -32,6 +32,7 @@ module.exports.routes = {
   'get /v1/message/:id': 'v1/MessageController.show',
   'put /v1/message/:id': 'v1/MessageController.update',
   'delete /v1/message/:id': 'v1/MessageController.destroy',
+  'get /v1/messages/search': 'v1/MessageController.search',
 
   /* Locations */
   'post /v1/location': 'v1/LocationController.create',

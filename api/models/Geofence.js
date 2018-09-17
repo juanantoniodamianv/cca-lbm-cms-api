@@ -41,8 +41,7 @@ module.exports = {
       defaultsTo: true
     },
     delayHours: {
-      type: "number",
-      required: true,
+      type: "number"
     },
     location: {
       model: 'location'

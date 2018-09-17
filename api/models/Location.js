@@ -26,9 +26,7 @@ module.exports = {
     },
     memberId: {
       type: "string",
-      required: true,
-      unique: true,
-      columnType: 'string'
+      required: true
     },
     address1: {
       type: "string"

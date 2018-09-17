@@ -120,7 +120,7 @@ module.exports = {
         
     db.collection('message').find({
       $or: [
-        {title: {$regex: value}}
+        {title: {$regex: value, $options: 'i'}}
       ]
     })
     .toArray((err, messages) => {

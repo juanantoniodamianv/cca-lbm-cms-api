@@ -79,10 +79,10 @@ module.exports = {
         
     db.collection('user').find({
       $or: [
-        {email: {$regex: value}},
-        {firstName: {$regex: value}},
-        {lastName: {$regex: value}},
-        {organization: {$regex: value}} 
+        {email: {$regex: value, $options: 'i'}},
+        {firstName: {$regex: value, $options: 'i'}},
+        {lastName: {$regex: value, $options: 'i'}},
+        {organization: {$regex: value, $options: 'i'}} 
       ]
     })
 

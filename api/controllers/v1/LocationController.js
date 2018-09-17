@@ -110,13 +110,13 @@ module.exports = {
     return ResponseService.json(200, res, responseData)
   },
 
-  search: (req, res) => {
-    var db = Location.getDatastore().manager;
+  search: async (req, res) => {
+/*     var db = Location.getDatastore().manager;
     var value = new RegExp(req.param('value'));
         
     db.collection('location').find({
       $or: [
-        {name: {$regex: value}}
+        {name: {$regex: value, $options: 'i'}}
       ]
     })
     .toArray((err, locations) => {
@@ -126,7 +126,29 @@ module.exports = {
         total: locations.length || 0
       }
       return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
+    });  */
+    
+
+    var value = req.param('value');
+
+    var locations = await Location.find({name: {contains: value}})
+                            .populate('messages')
+                            .populate('beacons')
+                            .populate('geofences')
+                            .intercept('UsageError', (err) => {
+                              return ResponseService.json(400, res, "Locations with Messages could not be populated: invalid data.", err)
+                            });
+    // --> COUNT method for message, beacon and geofence relationship
+    locations.forEach(location => {
+      location.messages = location.messages.length
+      location.beacons = location.beacons.length
+      location.geofences = location.geofences.length
     });
+    var responseData = {
+      locations
+    }
+    return ResponseService.json(200, res, responseData) 
+
   },
 
 };

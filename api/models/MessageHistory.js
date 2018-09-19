@@ -29,13 +29,13 @@ module.exports = {
   },
 
   // I need locationId to association with trigger message?
-  createMessageHistory: async (deviceId, trigger, triggerType) => {
+  createMessageHistory: async (deviceId, trigger, triggerType, message) => {
     var data = {
       location: trigger.location, // <-- locationId to beacon or geofence with association, neccessary to index function
       historyType: triggerType,
       name: trigger.name,
       userId: deviceId,
-      message: trigger.messageOnTrigger.message
+      message: message
     }
     sails.log.info(data);
     await MessageHistory.create(data)

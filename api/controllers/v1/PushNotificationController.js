@@ -58,7 +58,7 @@ module.exports = {
       await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
       .then(
         result => {
-          MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
+          MessageHistory.createMessageHistory(deviceId, trigger, triggerType, body);
         }
       )
       .catch((error) => {
@@ -135,7 +135,7 @@ function delayPushNotification (deviceId, trigger, triggerType, title, body, url
   cron.scheduleJob(date, async () => {
     await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
       .then(result => {
-        MessageHistory.createMessageHistory(deviceId, trigger, triggerType);
+        MessageHistory.createMessageHistory(deviceId, trigger, triggerType, "(On Delay) ".concat(body));
       }
     );
   });      

@@ -66,7 +66,9 @@ module.exports = {
   },
   
   getById: async (id) => {
-    var beacon = await Beacon.findOne(id).populate('messageOnTrigger');
+    var beacon = await Beacon.findOne(id)
+      .populate('messageOnTrigger')
+      .populate('messageAfterDelay');
     return beacon;
   },
 };

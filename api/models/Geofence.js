@@ -63,7 +63,9 @@ module.exports = {
   },
 
   getById: async (id) => {
-    var geofence = await Geofence.findOne(id).populate('messageOnTrigger');
+    var geofence = await Geofence.findOne(id)
+    .populate('messageOnTrigger')
+    .populate('messageAfterDelay');
     return geofence;
   },
 };

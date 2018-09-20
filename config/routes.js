@@ -45,7 +45,11 @@ module.exports.routes = {
 
   /* Location Messages */
   'get /v1/location/:locationid/messages': 'v1/LocationController.getAllLocationMessages',           // <-- Get all messages associated to a specific location
+  'get /v1/location/:locationid/messages/search': 'v1/LocationController.searchAllLocationMessages',  // <-- Search messages with association to a specific location
   'get /v1/location/:locationid/notifications': 'v1/LocationController.getAllLocationNotifications', // <-- Get all notifications sent for a specific locations
+
+
+
 
   /* #### Location Geofences ####*/
   'post /v1/location/:locationid/geofence': 'v1/GeofenceController.create',                   // <-- Create a new geofence for a specific location

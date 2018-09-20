@@ -110,28 +110,65 @@ module.exports = {
     return ResponseService.json(200, res, responseData)
   },
 
+  searchAllLocationMessages: async (req, res) => {
+    var value = req.param('value') || undefined;
+    if (!req.param('locationid')) return ResponseService.json(401, res, "LocationId path param are required.");
+    var location = await Location.find({
+      where: { id: req.param('locationid')}
+    }).populate('messages', { title: { contains: value }})
+    .intercept('UsageError', (err) => {
+      return ResponseService.json(400, res, "Messages with Locations could not be populated: invalid data.", err)
+    });
+    var responseData = {
+      location
+    }
+    if (location.length <= 0) return ResponseService.json(204, res, responseData)
+    return ResponseService.json(200, res, responseData)
+  },
+
   search: async (req, res) => {
-/*     var db = Location.getDatastore().manager;
-    var value = new RegExp(req.param('value'));
+    // var db = Location.getDatastore().manager;
+    // var value = new RegExp(req.param('value'));
+
+    // db.collection('location').find({
+    //   $or: [
+    //     { name: { $regex: value, $options: 'i' } }
+    //   ]
+    // }).aggregate([
+    //   {
+    //     $lookup: {
+    //       from: "beacon",
+    //       foreignField: "_id",
+    //       as: "beacon"
+    //     }
+    //   }
+    // ])
+
+
+
         
-    db.collection('location').find({
+/*     db.collection('location').find({
       $or: [
         {name: {$regex: value, $options: 'i'}}
       ]
-    })
-    .toArray((err, locations) => {
-      if (err) return ResponseService.json(400, res, "Locations could not be found: invalid data.", err)
-      var responseData = {
-        locations, 
-        total: locations.length || 0
-      }
-      return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
-    });  */
+    }) */
+    // .toArray((err, locations) => {
+    //   if (err) return ResponseService.json(400, res, "Locations could not be found: invalid data.", err)
+    //   var responseData = {
+    //     locations, 
+    //     total: locations.length || 0
+    //   }
+    //   return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
+    // }); 
     
 
     var value = req.param('value');
 
-    var locations = await Location.find({name: {contains: value}})
+    var locations = await Location.find({
+                            or: [
+                              { name: { contains: value }},
+                              { memberId: { contains: value }}
+                            ]})
                             .populate('messages')
                             .populate('beacons')
                             .populate('geofences')
@@ -147,7 +184,7 @@ module.exports = {
     var responseData = {
       locations
     }
-    return ResponseService.json(200, res, responseData) 
+    return ResponseService.json(200, res, responseData)  
 
   },
 

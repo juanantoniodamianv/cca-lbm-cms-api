@@ -41,7 +41,7 @@ module.exports = {
       type: "string"
     },
     postalCode: {
-      type: "number"
+      type: "string"
     },
     active: {
       type: "boolean",

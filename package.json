@@ -1,5 +1,5 @@
 {
-  "name": "CCA Location Based Messaging Backend",
+  "name": "auth-example",
   "private": true,
   "version": "1.0.0",
   "description": "This is the backend code for the LBM portal and messaging for the In Store apps.",

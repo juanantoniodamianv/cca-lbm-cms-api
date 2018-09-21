@@ -1,8 +1,8 @@
 {
-  "name": "auth-example",
+  "name": "CCA Location Based Messaging Backend",
   "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
+  "version": "1.0.0",
+  "description": "This is the backend code for the LBM portal and messaging for the In Store apps.",
   "keywords": [],
   "dependencies": {
     "bcrypt": "^3.0.0",
@@ -31,7 +31,7 @@
     "type": "git",
     "url": "git://github.com/timi/auth-example.git"
   },
-  "author": "timi",
+  "author": "Ballast Lane Applications, LLC",
   "license": "",
   "devDependencies": {
     "nodemon": "^1.17.5"

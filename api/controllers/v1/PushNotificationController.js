@@ -47,6 +47,9 @@ module.exports = {
         }
       })
     }
+
+    sails.log.info('Preparing to send message for: ' + triggerType + ' - ' + title);
+
     /* Device is available to receive push notification? */
     await MessageHistory.isAvailableToPushNotification(deviceId, triggerType, body).then(result => {
       isAvailable = result;  

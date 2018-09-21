@@ -12,7 +12,8 @@ module.exports = {
   },
   
   create: async (req, res) => {
-    if (!req.body.name || !req.body.majorId || !req.body.minorId || !req.body.triggerProximity || !req.param('locationid')) return ResponseService.json(401, res, "Name, MajorId, MinorId, TriggerProximity attributes and Location Path are required.");
+    if (!req.body.name || !req.body.majorId || !req.body.minorId || !req.body.triggerProximity || !req.param('locationid')) 
+      return ResponseService.json(401, res, "Beacon Name, MajorId, MinorId, Proximity and Location Number are required.");
 
     /* Verify if the Beacon parameter exists */
     if (Location.getLocation(req.param('locationid')) === undefined) return ResponseService.json(400, res, "The specified location does not exist.", err)

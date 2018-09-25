@@ -53,8 +53,8 @@ module.exports = {
   },
   
   isAvailableToPushNotification: async (deviceId, triggerType, body) => {  
-    var expiresAt = 2;  // Value to expire message on push notification, after this data value the notification has been available to sent
-    var expiresTime = 'minutes';  /*  --> 'hours' 'minutes' or 'seconds' */
+    var expiresAt = 24;  // Value to expire message on push notification, after this data value the notification has been available to sent
+    var expiresTime = 'hours';  /*  --> 'hours' 'minutes' or 'seconds' */
     var query = await MessageHistory.find({
       where: {
         userId: deviceId,

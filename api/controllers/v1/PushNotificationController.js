@@ -25,7 +25,7 @@ module.exports = {
           title = beacon.name;
           body = beacon.messageOnTrigger.message;
           url = beacon.messageOnTrigger.deeplink;
-          messageAfterDelay = beacon.messageAfterDelay.message;
+          messageAfterDelay = beacon.messageAfterDelay.message || undefined;
           trigger = beacon;
         } else {
           /* NOT EXIST BEACON OR NOT HAVE A MESSAGE TO SEND */
@@ -39,7 +39,7 @@ module.exports = {
           title = geofence.name;
           body = geofence.messageOnTrigger.message;
           url = geofence.messageOnTrigger.deeplink;
-          messageAfterDelay = geofence.messageAfterDelay.message;
+          messageAfterDelay = geofence.messageAfterDelay.message || undefined;
           trigger = geofence;
         } else {
           /* NOT EXIST GEOFENCE OR NOT HAVE A MESSAGE TO SEND */

@@ -61,31 +61,22 @@ module.exports = {
       });
   },
   
-  // enviar push notification on trigger.. ver-> on delay
-  sendPushNotification: async (inputs, exits) => {
-    // try {
-    //   const { device, title, body, payload, opts } = inputs
-    //   const message = Object.assign({ notification: { title, body }, token: device, data: payload }, opts)
-    //   const result = await admin.messaging(app).send(message)
-    //   return exits.success(result)
-    // }catch(error) {
-    //   return exits.error()
-    // }
-    
-    //const { device, title, body } = inputs
+  sendPushNotification: async (inputs, exits) => {    
     const token = inputs.deviceId;
     const title = inputs.title;
     const body = inputs.body;
     const url = inputs.url;
 
-    const message = Object.assign({ notification: { title, body }, token, data: {'url': url} })
-    // var message = {
-    //   notification: {
-    //     title,
-    //     body
-    //   },
-    //   token: device
-    // };
+    //const message = Object.assign({ notification: { title, body }, token, data: {'url': url} })
+    const message = Object.assign({ 
+                      token,
+                      data: {
+                        'title': title,
+                        'body': body,
+                        'url': url   
+                      }
+                    });
+
     sails.log.info("*****************")
     sails.log.info(message)
 

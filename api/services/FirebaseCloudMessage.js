@@ -70,9 +70,11 @@ module.exports = {
     //const message = Object.assign({ notification: { title, body }, token, data: {'url': url} })
     const message = Object.assign({ 
                       token,
-                      notification: {
-                        title, 
-                        body
+                      apns: {
+                        notification: {
+                          title, 
+                          body  
+                        }
                       },
                       data: {
                         'title': title,

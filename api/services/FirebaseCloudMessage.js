@@ -67,15 +67,19 @@ module.exports = {
     const body = inputs.body;
     const url = inputs.url;
 
-    const message = Object.assign({ notification: { title, body }, token, data: {'url': url} })
-/*     const message = Object.assign({ 
+    //const message = Object.assign({ notification: { title, body }, token, data: {'url': url} })
+    const message = Object.assign({ 
                       token,
+                      notification: {
+                        title, 
+                        body
+                      },
                       data: {
                         'title': title,
                         'body': body,
                         'url': url   
                       }
-                    }); */
+                    });
 
     sails.log.info("*****************")
     sails.log.info(message)

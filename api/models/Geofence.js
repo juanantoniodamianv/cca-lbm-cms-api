@@ -10,9 +10,7 @@ module.exports = {
   attributes: {
     name: {
       type: "string",
-      required: true,
-      unique: true,
-      columnType: "string"
+      required: true
     },
     radius: {
       type: "number",

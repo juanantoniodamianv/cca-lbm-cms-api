@@ -12,14 +12,20 @@ module.exports = {
   },
   
   create: async (req, res) => {
-    if (!req.body.name || !req.body.majorId || !req.body.minorId || !req.body.triggerProximity || !req.param('locationid')) 
-      return ResponseService.json(401, res, "Beacon Name, MajorId, MinorId, Proximity and Location Number are required.");
+    if (!req.body.name || !req.body.majorId || !req.body.minorId || !req.body.triggerProximity || !req.param('locationid')) return ResponseService.json(401, res, "Beacon Name, MajorId, MinorId, Proximity and Location Number are required.");
 
     /* Verify if the Beacon parameter exists */
     if (Location.getLocation(req.param('locationid')) === undefined) return ResponseService.json(400, res, "The specified location does not exist.", err)
     if ((req.body.messageOnTrigger === undefined) || (Location.isRelationship(req.body.messageOnTrigger, req.param('locationid'))) === undefined) return ResponseService.json(400, res, "Relationship with messageOnTrigger does not exist.")
     /* MessageAfterDelay is not required */
     //if ((req.body.messageAfterDelay === undefined) || (Location.isRelationship(req.body.messageAfterDelay, req.param('locationid'))) === undefined) return ResponseService.json(400, res, "Relationship with messageAfterDelay does not exist.")
+   
+    /*  await Beacon.majorIdIsAvailable(req.body.majorId, req.body.minorId, req.param('locationid')).then(result => {
+      if (result != true) {
+        return ResponseService.json(400, res, 'This majorId/minorId is already in use');
+      } 
+    }) */
+    
 
     var allowedParameters = [
       "name", "beaconType", "majorId", "minorId", "triggerProximity", "messageOnTrigger", "enableMessageOnTrigger", "messageAfterDelay", "enableMessageAfterDelay", "delayHours", "location"

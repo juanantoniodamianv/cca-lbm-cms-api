@@ -127,64 +127,45 @@ module.exports = {
   },
 
   search: async (req, res) => {
-    // var db = Location.getDatastore().manager;
-    // var value = new RegExp(req.param('value'));
-
-    // db.collection('location').find({
-    //   $or: [
-    //     { name: { $regex: value, $options: 'i' } }
-    //   ]
-    // }).aggregate([
-    //   {
-    //     $lookup: {
-    //       from: "beacon",
-    //       foreignField: "_id",
-    //       as: "beacon"
-    //     }
-    //   }
-    // ])
-
-
-
+    var db = Location.getDatastore().manager;
+    var value = new RegExp(req.param('value'));
+    var locationIds = [];
         
-/*     db.collection('location').find({
+    db.collection('location').find({
       $or: [
-        {name: {$regex: value, $options: 'i'}}
+        {name: {$regex: value, $options: 'i'}},
+        {memberId: {$regex: value, $options: 'i'}}
       ]
-    }) */
-    // .toArray((err, locations) => {
-    //   if (err) return ResponseService.json(400, res, "Locations could not be found: invalid data.", err)
-    //   var responseData = {
-    //     locations, 
-    //     total: locations.length || 0
-    //   }
-    //   return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
-    // }); 
-    
+    },{"_id":1}) 
+    .toArray( async (err, locations) => {
+      if (err) return ResponseService.json(400, res, "Locations could not be found: invalid data.", err)
 
-    var value = req.param('value');
+      Object.keys(locations).forEach(key => {
+        location = locations[key];     
+        locationIds.push(String(location['_id']));
+      });
+          
+      var resultLocations = await Location.find({
+        id: { in: locationIds }
+      })
+      .populate('messages')
+      .populate('beacons')
+      .populate('geofences')
+      .intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "Locations with Messages could not be populated: invalid data.", err)
+      });
+      // --> COUNT method for message, beacon and geofence relationship
+      resultLocations.forEach(location => {
+        location.messages = location.messages.length
+        location.beacons = location.beacons.length
+        location.geofences = location.geofences.length
+      });
+      var responseData = {
+        locations: resultLocations
+      }
+      return ResponseService.json(200, res, responseData)
 
-    var locations = await Location.find({
-                            or: [
-                              { name: { contains: value }},
-                              { memberId: { contains: value }}
-                            ]})
-                            .populate('messages')
-                            .populate('beacons')
-                            .populate('geofences')
-                            .intercept('UsageError', (err) => {
-                              return ResponseService.json(400, res, "Locations with Messages could not be populated: invalid data.", err)
-                            });
-    // --> COUNT method for message, beacon and geofence relationship
-    locations.forEach(location => {
-      location.messages = location.messages.length
-      location.beacons = location.beacons.length
-      location.geofences = location.geofences.length
-    });
-    var responseData = {
-      locations
-    }
-    return ResponseService.json(200, res, responseData)  
+    }); 
 
   },
 

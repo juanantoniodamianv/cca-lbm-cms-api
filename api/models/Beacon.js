@@ -71,5 +71,29 @@ module.exports = {
       .populate('messageAfterDelay');
     return beacon;
   },
-};
 
+  /* Check if majorId is already in use */
+  
+/*   beforeCreate: async (values, cb) => {
+    var beacons = await Beacon.find({majorId: values.major}).sort('location DESC');
+
+    console.log(beacons.length)
+    if (beacons.length == 0) {
+      exit = true; // majorId está disponible
+    } else {
+
+      beacons.some((val, i) => {
+        if (val.location == values.locationId) {
+          if (val.minorId == values.minor) {
+            console.log('entre')
+            exit = val;
+            return true;
+          }
+        }
+      })
+      console.log(`exit: ${exit}`)
+      return exit;
+    }
+  }, */
+
+};

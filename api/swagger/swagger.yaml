@@ -864,6 +864,28 @@ paths:
         204:
           description: No content.
 
+  /export-messages:
+    get:
+      summary: Get all messages history for a specific location
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: token
+          description: Authorization token
+          type: string
+          required: true
+        - in: query
+          name: locationid
+          description: The location id.
+          type: string
+          required: true
+      responses:
+        200: 
+          description: All messages history has been retrieved with specific location.
+        204:
+          description: No content.
+
 definitions:
   UserSignUp:           
     type: object

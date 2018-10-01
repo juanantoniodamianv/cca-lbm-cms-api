@@ -29,7 +29,7 @@ module.exports = {
         }
       };
       
-      res.setHeader('Content-disposition', 'attachment; filename=report.csv');
+      res.setHeader('Content-disposition', 'attachment; filename="report.csv"');
       res.set('Content-Type', 'text/csv');
       
       

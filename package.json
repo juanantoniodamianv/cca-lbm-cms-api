@@ -9,6 +9,7 @@
     "dotenv": "^6.0.0",
     "firebase-admin": "^5.13.1",
     "include-all": "~0.1.6",
+    "json-2-csv": "^2.3.1",
     "jsonwebtoken": "^8.2.1",
     "mandrill-api": "^1.0.45",
     "moment": "^2.22.2",

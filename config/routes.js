@@ -92,6 +92,7 @@ module.exports.routes = {
   // Params: beaconId/geofenceId, deviceId
   'post /v1/notifications': 'v1/PushNotificationController.triggerPushNotification', //  <-- Called when device has entered a specified Geofence or found a beacon. 
   'get /v1/notifications': 'v1/PushNotificationController.index',  //  <-- Get a list of all notifications sent
+  'get /v1/export-messages': 'v1/MessageHistoryController.exportToCsv',
 
   /* Only test */
   'get /v1/alb_ping': 'TestController.isOk',

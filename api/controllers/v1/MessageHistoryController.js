@@ -26,7 +26,13 @@ module.exports = {
         delimiter : {
           wrap  : '"', // Double Quote (") character
           field : ',', // Comma field delimiter
-        }
+          array : ';', // Semicolon array value delimiter
+          eol   : ' ' // Newline delimiter
+        },
+        prependHeader    : true,
+        sortHeader       : false,
+        trimHeaderValues : true,
+        trimFieldValues  :  true,
       };
       
       res.setHeader('Content-disposition', 'attachment; filename="report.csv"');

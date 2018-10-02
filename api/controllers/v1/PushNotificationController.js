@@ -64,7 +64,7 @@ module.exports = {
     });
     if (isAvailable == false) return res.json(404, { error: "This message has already been sent a moment ago." });
     /* SENT MESSAGE ON TRIGGER */
-    if (title !== undefined && body !== undefined && deviceId !== undefined && trigger !== undefined && triggerType !== undefined) {
+    if (title !== undefined && body !== undefined && deviceId !== undefined && trigger !== undefined && triggerType !== undefined && trigger.enableMessageOnTrigger) {
       sails.log.info('Sending Message')
       await FirebaseCloudMessage.sendPushNotification({deviceId, title, body, url})
       .then(

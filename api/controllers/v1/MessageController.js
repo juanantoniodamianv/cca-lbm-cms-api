@@ -125,7 +125,12 @@ module.exports = {
     })
     .toArray((err, messages) => {
       if (err) return ResponseService.json(400, res, "Messages could not be found: invalid data.", err)
-      var responseData = {
+			messages.forEach(message => {
+				message.id = message._id
+				delete message._id
+			});
+
+			var responseData = {
         messages, 
         total: messages.length || 0
       }

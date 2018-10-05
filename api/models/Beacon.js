@@ -15,7 +15,8 @@ module.exports = {
       columnType: "string"
     },
     beaconType: {
-      type: "string"
+      type: "string",
+      required: true
     },  
     majorId: {
       type: "number",

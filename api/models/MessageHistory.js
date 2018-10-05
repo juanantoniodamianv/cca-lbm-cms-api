@@ -30,7 +30,7 @@ module.exports = {
 
   // I need locationId to association with trigger message?
   createMessageHistory: async (deviceId, trigger, triggerType, message) => {
-    triggerType = triggerType == 'beacon' ? `${triggerType}: ${trigger.type}` : `${triggerType}: ${trigger.type}`;
+    triggerType = triggerType.toLowerCase() == 'beacon' ? trigger.type : 'geofence';
     var data = {
       location: trigger.location, // <-- locationId to beacon or geofence with association, neccessary to index function
       historyType: triggerType,

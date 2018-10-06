@@ -130,6 +130,11 @@ module.exports = {
     var db = Location.getDatastore().manager;
     var value = new RegExp(req.param('value'));
     var locationIds = [];
+    var options = {
+			//limit: req.param('limit') || undefined,
+			//skip: req.param('skip') || undefined,
+			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
+		};
         
     db.collection('location').find({
       $or: [
@@ -148,6 +153,7 @@ module.exports = {
       var resultLocations = await Location.find({
         id: { in: locationIds }
       })
+      .sort(options.sort)
       .populate('messages')
       .populate('beacons')
       .populate('geofences')

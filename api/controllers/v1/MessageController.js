@@ -116,15 +116,42 @@ module.exports = {
 
 	search: (req, res) => {
     var db = Message.getDatastore().manager;
-    var value = new RegExp(req.param('value'));
+		var value = new RegExp(req.param('value'));
+		var messageIds = [];
+		var options = {
+			//limit: req.param('limit') || undefined,
+			//skip: req.param('skip') || undefined,
+			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
+		};
         
     db.collection('message').find({
       $or: [
         {title: {$regex: value, $options: 'i'}}
       ]
-    })
-    .toArray((err, messages) => {
+    },{"_id":1})
+    .toArray(async (err, messages) => {
       if (err) return ResponseService.json(400, res, "Messages could not be found: invalid data.", err)
+			Object.keys(messages).forEach(key => {
+				message = messages[key];
+				messageIds.push(String(message['_id']));
+			});
+
+			var resultMessages = await Message.find({
+				id: { in: messageIds }
+			})
+			.sort(options.sort)
+			.populate('locations')
+			.intercept('UsageError', (err) => {
+				return ResponseService.json(400, res, "Messages with Locations could not be populated: invalid data", err)
+			});
+			var responseData = {
+				messages: resultMessages
+			}
+
+			return ResponseService.json(200, res, responseData)
+			
+			/* 
+			
 			messages.forEach(message => {
 				message.id = message._id
 				delete message._id
@@ -134,7 +161,7 @@ module.exports = {
         messages, 
         total: messages.length || 0
       }
-      return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
+      return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData); */
     });
   },
 

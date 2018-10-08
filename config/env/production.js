@@ -24,11 +24,11 @@ module.exports = {
   datastores: {
     default: {
       adapter: 'sails-mongo',
-      host: 'localhost',
-      port: 27017,
-      user: 'cca_api_prod',
-      password: 'xPM6dL+PNX97#m5m',
-      database: 'cca_api_prod' //optional
+      host: process.env.DB_HOST_PROD,
+      port: process.env.DB_PORT_PROD,
+      user: process.env.DB_USER_PROD,
+      password: process.env.DB_PASSWORD_PROD,
+      database: process.env.DB_NAME_PROD //optional
     }
   },
 

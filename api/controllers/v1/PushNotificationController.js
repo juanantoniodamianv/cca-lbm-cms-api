@@ -91,8 +91,8 @@ module.exports = {
     var totalCount;
     var responseData = {};
     var options = {
-      limit: req.param('limit') || undefined,
-      skip: req.param('skip') || undefined,
+      limit: +req.param('limit') || undefined,
+      skip: +req.param('skip') || undefined,
       sort: req.param('sort') || "createdAt desc", //columnName desc/asc
     };
     var location = req.param('locationid') || undefined;

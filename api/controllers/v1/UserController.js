@@ -76,6 +76,12 @@ module.exports = {
   search: (req, res) => {
     var db = User.getDatastore().manager;
     var value = new RegExp(req.param('value'));
+    var userIds = [];
+		var options = {
+			//limit: req.param('limit') || undefined,
+			//skip: req.param('skip') || undefined,
+			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
+		};
         
     db.collection('user').find({
       $or: [
@@ -84,27 +90,26 @@ module.exports = {
         {lastName: {$regex: value, $options: 'i'}},
         {organization: {$regex: value, $options: 'i'}} 
       ]
-    })
-
-    
-    
-    /* 
-    var criteria = req.param('criteria');
-    var condition = {};
-    condition['contains'] = value;
-    var query = {};
-    query[criteria] = condition;    
-    sails.log.info(query); 
-    User.find({
-      where: query
-    }) */
-    .toArray((err, users) => {
+    },{"_id":1})
+    .toArray(async (err, users) => {
       if (err) return ResponseService.json(400, res, "Users could not be found: invalid data.", err)
-      var responseData = {
-        users, 
-        total: users.length || 0
-      }
-      return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData);
+      Object.keys(users).forEach(key => {
+				user = users[key];
+				userIds.push(String(user['_id']));
+      });
+      
+      var resultUsers = await User.find({
+				id: { in: userIds }
+			})
+			.sort(options.sort)
+			.intercept('UsageError', (err) => {
+				return ResponseService.json(400, res, "Users could not be found: invalid data", err)
+			});
+			var responseData = {
+				users: resultUsers
+			}
+
+			return ResponseService.json(200, res, responseData)
     });
   },
 

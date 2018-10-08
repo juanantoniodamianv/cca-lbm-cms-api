@@ -149,19 +149,7 @@ module.exports = {
 			}
 
 			return ResponseService.json(200, res, responseData)
-			
-			/* 
-			
-			messages.forEach(message => {
-				message.id = message._id
-				delete message._id
-			});
 
-			var responseData = {
-        messages, 
-        total: messages.length || 0
-      }
-      return responseData.total == 0 ? ResponseService.json(204, res, responseData) : ResponseService.json(200, res, responseData); */
     });
   },
 

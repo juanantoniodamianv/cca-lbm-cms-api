@@ -26,16 +26,7 @@ module.exports = {
 				return ResponseService.json(400, res, "Message could not be created: invalid data.", err)				
 			})
 			.fetch();
-/* 		if (req.body.locations) { 
-			var locationsMessages = await Message.addToCollection(newMessage.id, 'locations', req.body.locations)	// [locationId, locationId]
-																.intercept('UsageError', (err) => {
-																	return ResponseService.json(400, res, "LocationsMessages relationship could not be created.", err)
-																})
-			newMessage = await Message.find(newMessage.id).populate('locations')
-										.intercept('UsageError', (err) =>{
-											return ResponseService.json(400, res, "Message with Locations could not be populated: invalid data.", err)				
-										});
-		} */
+
 		var responseData = {
 			message: newMessage,
 		}
@@ -62,18 +53,25 @@ module.exports = {
 	},
 
 	destroy: async (req, res) => {
-		await Message.destroy(req.param('id'), (err) => {
-			if (err) return ResponseService.json(400, res, "Message could not be destroyed", err.Errors)
+		beforeDelete(req.param('id')).then(async (result) => { // This could be Lifecycle Callbacks, but don't pass path params. -.-
+			if (result > 0) {
+				return ResponseService.json(400, res, "This message is in use.");
+			} else {
+				await Message.destroy(req.param('id'), (err) => {
+					if (err) return ResponseService.json(400, res, "Message could not be destroyed", err.Errors)
+				})
+				/* verificar metodo remover en cascada */
+				destroyedMessage = await Message.removeFromCollection(req.param('id'), 'locations').members(req.body.locations)
+					.intercept('UsageError', (err) => {
+						return ResponseService.json(400, res, "LocationsMessages relationship could not be destroyed.", err)
+					})
+				var responseData = {
+					message: destroyedMessage
+				}
+				return ResponseService.json(200, res, "Message destroyed succesfully", responseData)
+			}
 		})
-		/* verificar metodo remover en cascada */
-		destroyedMessage = await Message.removeFromCollection(req.param('id'), 'locations', req.param('locations'))
-			.intercept('UsageError', (err) => {
-				return ResponseService.json(400, res, "LocationsMessages relationship could not be destroyed.", err)
-			})
-		var responseData = {
-			message: destroyedMessage
-		}
-		return ResponseService.json(200, res, "Message destroyed succesfully", responseData)
+
 	},
 
 	index: async (req, res, next) => {
@@ -154,4 +152,19 @@ module.exports = {
   },
 
 };
+
+async function beforeDelete(messageId) {
+	var countResult = 0;
+	countResult = await Beacon.count({messageOnTrigger: messageId});
+	if (countResult === 0) {
+		countResult = await Beacon.count({messageAfterDelay: messageId});	
+		if (countResult === 0) {
+			countResult = await Geofence.count({messageOnTrigger: messageId});
+			if (countResult === 0) {
+				countResult = await Geofence.count({messageAfterDelay: messageId});
+			}	
+		}
+	}
+	return +countResult;
+}
 

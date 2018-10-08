@@ -52,7 +52,6 @@ module.exports = {
     var totalCount = await Message.count();
     if (totalCount) { totalCount = +totalCount; }
 		return totalCount;
-	}
+  },
 
 };
-

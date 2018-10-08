@@ -42,9 +42,12 @@ module.exports = {
   },
 
   destroy: (req, res) => {
-		Location.destroy(req.param('id'), (err, location) => {
+		Location.destroy(req.param('id'), async (err, location) => {
 			if (err) return ResponseService.json(400, res, "Location could not be destroyed", err.Errors)
-			var responseData = {
+      await Beacon.destroy({location: req.param('id')});
+      await Geofence.destroy({location: req.param('id')});
+      await MessageHistory.destroy({location: req.param('id')});
+      var responseData = {
 				location
 			}
 			return ResponseService.json(200, res, "Location destroyed succesfully", responseData)

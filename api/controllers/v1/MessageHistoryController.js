@@ -6,6 +6,7 @@
  */
 var _ = require('lodash');
 var converter = require('json-2-csv');
+var moment = require('moment');
 
 module.exports = {
   _config: {
@@ -30,6 +31,11 @@ module.exports = {
           eol   : '\n' // Newline delimiter
         }
       };
+
+      messageHistory.forEach(message => {
+        message.createdAt = moment(message.createdAt).toString();
+        message.updatedAt = moment(message.updatedAt).toString();
+      });
       
       res.setHeader('Content-disposition', 'attachment; filename="report.csv"');
       res.set('Content-Type', 'text/csv');

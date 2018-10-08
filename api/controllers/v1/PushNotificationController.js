@@ -97,6 +97,9 @@ module.exports = {
     };
     var location = req.param('locationid') || undefined;
     if (location) {
+      await MessageHistory.getTotalCount(location).then(count => {
+        totalCount = count;
+      })
       await MessageHistory.find({
         where: { location },
         skip: options.skip,
@@ -110,6 +113,8 @@ module.exports = {
           messageHistory,
           skip: options.skip,
           limit: options.limit,
+          sort: options.sort,
+          total: totalCount || 0
         }
       })
     } else {
@@ -127,6 +132,7 @@ module.exports = {
           messageHistory,
           skip: options.skip,
           limit: options.limit,
+          sort: options.sort,
           total: totalCount || 0
         }
       })

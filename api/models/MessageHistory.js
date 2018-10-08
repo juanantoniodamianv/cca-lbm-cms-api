@@ -47,8 +47,12 @@ module.exports = {
     return 0; 
   },
 
-  getTotalCount: async () => {
-    var totalCount = await MessageHistory.count();
+  getTotalCount: async (id) => {
+    if (id !== undefined) {
+      var totalCount = await MessageHistory.count({location: id});
+    } else {
+      var totalCount = await MessageHistory.count();
+    }
     if (totalCount) { totalCount = +totalCount; }
 		return totalCount;
   },

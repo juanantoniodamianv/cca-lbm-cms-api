@@ -14,7 +14,7 @@ module.exports = {
   create: async (req, res) => {
     if (!req.body.name || !req.body.contactEmail || !req.body.locationNumber || !req.body.memberId) return ResponseService.json(401, res, "Name, Contact Email, Location Number and Member Id are required.");
     var allowedParameters = [
-      "name", "contactEmail", "locationNumber", "memberId", "address1", "address2", "city", "state", "postalCode", "active"
+      "name", "contactEmail", "locationNumber", "memberId", "address1", "address2", "city", "state", "postalCode", "active", "locationBeaconID"
     ]
     var data = _.pick(req.body, allowedParameters);
     var newLocation = await Location.create(data)

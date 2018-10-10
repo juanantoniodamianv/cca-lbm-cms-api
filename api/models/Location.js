@@ -19,14 +19,20 @@ module.exports = {
       required: true,
     },
     locationNumber: {
-      type: "number",
+      type: "string",
       required: true,
       unique: true,
-      columnType: 'number'
+      columnType: 'string'
     },
     memberId: {
       type: "string",
       required: true
+    },
+    locationBeaconID: {
+      type: "number",
+      required: true,
+      unique: true,
+      columnType: 'number'
     },
     address1: {
       type: "string"

@@ -122,8 +122,8 @@ module.exports = {
   },
 
   indexPerLocationNumber: async (req, res) => {
-    if (req.param('locationNumber') === undefined)  return ResponseService.json(400, res, "Error with retrieved Beacons.", err)
-    var location = await Location.findOne({ locationNumber: req.param('locationNumber') })
+    if (req.param('locationBeaconID') === undefined)  return ResponseService.json(400, res, "Error with retrieved Beacons.", err)
+    var location = await Location.findOne({ locationBeaconID: req.param('locationBeaconID') })
       //.select(['id']) 
       .populate('beacons', { select: ['id', 'majorId', 'minorId', 'triggerProximity'] }) 
       .populate('geofences', { select: ['id', 'radius', 'longitude', 'latitude'] }) 
@@ -132,7 +132,7 @@ module.exports = {
       });
     if (location === undefined) return ResponseService.json(404, res, "This location do not exist.");
     var responseData = {
-      locationNumber: location.locationNumber,
+      locationBeaconID: location.locationBeaconID,
       beacons: location.beacons,
       geofences: location.geofences
     }

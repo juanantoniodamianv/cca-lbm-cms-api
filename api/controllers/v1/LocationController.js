@@ -99,13 +99,19 @@ module.exports = {
   },
   
   getAllLocationMessages: async (req, res) => {
+    var options = {
+			sort: req.param('sort') || 'createdAt desc' // columnName desc||asc
+		};
+
     if (!req.param('locationid')) return ResponseService.json(401, res, "LocationId path param are required.");
     var location = await Location.find({
       where: { id: req.param('locationid') }
-    }).populate('messages')
+    })
+    .populate('messages', { sort: options.sort })
     .intercept('UsageError', (err) => {
       return ResponseService.json(400, res, "Messages with Locations could not be populated: invalid data.", err)
     });
+
     var responseData = {
       location,
     }

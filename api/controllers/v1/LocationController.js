@@ -120,19 +120,42 @@ module.exports = {
   },
 
   searchAllLocationMessages: async (req, res) => {
-    var value = req.param('value') || undefined;
     if (!req.param('locationid')) return ResponseService.json(401, res, "LocationId path param are required.");
-    var location = await Location.find({
-      where: { id: req.param('locationid')}
-    }).populate('messages', { title: { contains: value }})
-    .intercept('UsageError', (err) => {
-      return ResponseService.json(400, res, "Messages with Locations could not be populated: invalid data.", err)
-    });
-    var responseData = {
-      location
-    }
-    if (location.length <= 0) return ResponseService.json(204, res, responseData)
-    return ResponseService.json(200, res, responseData)
+    
+    var db = Message.getDatastore().manager;
+    var value = new RegExp(req.param('value'));
+    var messageIds = [];
+    var options = {
+      sort: req.param('sort') || 'createdAt desc'
+    };
+
+    db.collection('message').find({
+      $or: [
+        {title: {$regex: value, $options: 'i'}}
+      ]
+    },{"_id":1})
+    .toArray(async (err, messages) => {
+      if (err) return ResponseService.json(400, res, "Messages could not be found: invalid data", err)
+      Object.keys(messages).forEach(key => {
+        message = messages[key];
+        messageIds.push(String(message['_id']));
+      });
+
+      var resultMessages = await Location.find({
+        where: { id: req.param('locationid') }
+      })
+      .populate('messages', { where: {id: messageIds}, sort: options.sort })
+      .intercept('UsageError', (err) => {
+        return ResponseService.json(400, res, "Messages with Locations could not be populated: invalid data", err)
+      });
+      
+      var responseData = {
+        location: resultMessages
+      }
+
+      return ResponseService.json(200, res, responseData)
+    })
+
   },
 
   search: async (req, res) => {

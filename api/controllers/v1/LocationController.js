@@ -131,7 +131,9 @@ module.exports = {
 
     db.collection('message').find({
       $or: [
-        {title: {$regex: value, $options: 'i'}}
+        {title: {$regex: value, $options: 'i'}},
+        {message: {$regex: value, $options: 'i'}},
+        {deeplink: {$regex: value, $options: 'i'}}
       ]
     },{"_id":1})
     .toArray(async (err, messages) => {

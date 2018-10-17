@@ -63,7 +63,7 @@ module.exports = {
     var query = await MessageHistory.find({
       where: {
         userId: deviceId,
-        historyType: triggerType,
+        //historyType: triggerType,
         message: body
       },
       select: ['createdAt'],
